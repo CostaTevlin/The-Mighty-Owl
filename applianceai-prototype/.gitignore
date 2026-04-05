@@ -12,6 +12,12 @@ dist/
 .env.local
 .env.*.local
 
+# Supabase CLI local metadata (project ref, pooler URL, etc. — do not commit)
+supabase/.temp/
+
+# Supabase CLI local metadata (project refs, pooler URLs — do not publish)
+supabase/.temp/
+
 # IDE
 .vscode/
 .idea/
