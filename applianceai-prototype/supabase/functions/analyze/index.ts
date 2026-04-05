@@ -15,7 +15,9 @@ interface AnalyzeRequest {
 interface AnalyzeResponse {
   model: string;
   confidence: 'high' | 'medium' | 'low';
+  quickAnswer: string;
   steps: string[];
+  commonMistakes: string[];
   safetyTips: string[];
   estimatedTime: string;
 }
@@ -66,37 +68,16 @@ Deno.serve(async (req) => {
         break;
     }
 
-    const systemPrompt = `You are ApplianceAI, a friendly home appliance expert. When shown a photo of an appliance, you identify the exact make and model, then provide clear, safe, step-by-step instructions for the user's specific task.
+    const systemPrompt = `You are a sharp, friendly expert who knows this exact appliance inside out. You're standing next to the user — help them like a knowledgeable friend, not a manual.
 
-Always respond in valid JSON format with this structure:
-{
-  "model": "string (exact make/model if identifiable)",
-  "confidence": "high|medium|low",
-  "steps": ["string", "string", ...],
-  "safetyTips": ["string", "string", ...],
-  "estimatedTime": "string (e.g., '5-10 minutes')"
-}
+Your voice: casual, confident, slightly cheeky. Use "you" directly. Recommend THE best option — don't list all possibilities.
 
-Rules:
-- Be concise and clear
-- Use simple, non-technical language
-- Number your steps implicitly (they will be numbered in the UI)
-- Include 3-8 safety tips appropriate to the task
-- If you cannot identify the model with high confidence, set confidence to 'medium' or 'low' but still provide generic, accurate instructions
-- Estimated time should be realistic for the task
-- All responses must be valid JSON`;
+Respond in JSON only:
+{"model":"string","confidence":"high|medium|low","quickAnswer":"The single safest default setting — one sentence, tell them exactly what to select/press/turn","steps":["Conversational step. Include WHY when not obvious. Reference this appliance's actual button/dial names."],"commonMistakes":["Things people get wrong on THIS appliance — be specific, not generic"],"safetyTips":["Only non-obvious tips specific to this appliance/task — skip 'read the manual'"],"estimatedTime":"string"}
 
-    const userPrompt = `I'm using a ${task} appliance and need help with the following task.
+Rules: 4-7 steps, 2-4 common mistakes, 2-3 safety tips, realistic time. If model uncertain set confidence medium/low but still give accurate instructions.`;
 
-Context: ${contextString}
-
-Based on the photo of this appliance, please:
-1. Identify the exact make and model if possible
-2. Provide step-by-step instructions for the task
-3. Include relevant safety tips
-4. Estimate how long this task will take
-
-Respond in JSON format only.`;
+    const userPrompt = `Task: ${task}\nContext: ${contextString}`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -106,8 +87,8 @@ Respond in JSON format only.`;
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1024,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 600,
         system: systemPrompt,
         messages: [
           {
@@ -152,13 +133,12 @@ Respond in JSON format only.`;
       throw new Error('Failed to parse AI response');
     }
 
+    // Fire-and-forget — don't block the response on the DB write
     const supabaseUrl = Deno.env.get('SUPABASE_URL');
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-
     if (supabaseUrl && supabaseKey) {
       const supabase = createClient(supabaseUrl, supabaseKey);
-
-      await supabase.from('scans').insert({
+      supabase.from('scans').insert({
         task,
         context,
         appliance_model: analysisResult.model,
@@ -167,7 +147,7 @@ Respond in JSON format only.`;
         safety_tips: analysisResult.safetyTips,
         estimated_time: analysisResult.estimatedTime,
         user_id: userId || null,
-      });
+      }).then().catch((err) => console.error('DB insert failed:', err));
     }
 
     return new Response(JSON.stringify(analysisResult), {

@@ -1,4 +1,6 @@
 ---
+import '../styles/global.css';
+
 interface Props {
   title?: string;
 }
@@ -12,6 +14,7 @@ const { title = 'The Mighty Owl' } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="The Mighty Owl - Snap. Learn. Done." />
+    <meta name="color-scheme" content="light" />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,6 +35,8 @@ const { title = 'The Mighty Owl' } = Astro.props;
 
   html {
     scroll-behavior: smooth;
+    color-scheme: light;
+    background-color: #ffffff;
   }
 
   body {
