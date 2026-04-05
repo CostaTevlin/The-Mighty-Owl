@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "/bin/bash",
+      "runtimeArgs": ["-c", "export PATH=/usr/local/bin:$PATH && cd applianceai-prototype && npx astro dev --port 4321"],
+      "port": 4321
+    },
+    {
+      "name": "preview",
+      "runtimeExecutable": "/bin/bash",
+      "runtimeArgs": ["-c", "export PATH=/usr/local/bin:$PATH && cd applianceai-prototype && npx astro preview --port 4322"],
+      "port": 4322
+    }
+  ]
+}
