@@ -1,0 +1,41 @@
+---
+---
+
+<div id="photo-screen" class="hidden min-h-screen w-full flex flex-col items-center justify-center px-6 py-8 bg-surface">
+  <div class="w-full max-w-md">
+    <div class="mb-8">
+      <button id="back-from-photo" class="text-accent font-bold mb-6 hover:text-red-600 transition">
+        ← Back
+      </button>
+      <h2 class="text-3xl font-bold text-primary mb-2">Take a photo</h2>
+      <p class="text-gray-500">A clear shot of the controls and display</p>
+    </div>
+
+    <div class="bg-white rounded-lg border-2 border-dashed border-gray-300 p-8 mb-6 text-center">
+      <img id="photo-preview" class="hidden w-full rounded-lg mb-6" alt="Preview" />
+
+      <input type="file" id="file-input" accept="image/*" capture="environment" />
+
+      <div id="upload-area" class="flex flex-col items-center gap-4">
+        <div class="text-5xl">📷</div>
+        <button
+          id="camera-btn"
+          class="w-full bg-accent text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-all"
+        >
+          Open Camera
+        </button>
+        <p class="text-sm text-gray-500">or</p>
+        <button
+          id="gallery-btn"
+          class="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-primary transition-all"
+        >
+          Upload from Gallery
+        </button>
+      </div>
+    </div>
+
+    <p class="text-xs text-gray-400 text-center">
+      Clear images help the AI identify your appliance accurately
+    </p>
+  </div>
+</div>

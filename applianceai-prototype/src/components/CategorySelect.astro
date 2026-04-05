@@ -1,0 +1,64 @@
+---
+---
+
+<div id="category-screen" class="hidden min-h-screen w-full flex flex-col items-center justify-center px-6 py-8 bg-surface">
+  <div class="w-full max-w-md">
+    <div class="mb-8">
+      <button id="back-from-category" class="text-accent font-bold mb-6 hover:text-red-600 transition">
+        ← Back
+      </button>
+      <h2 class="text-3xl font-bold text-primary mb-2">What appliance are you using?</h2>
+      <p class="text-gray-500">Choose the type to get tailored instructions</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <button
+        class="category-card aspect-square rounded-lg bg-white border-2 border-gray-200 hover:border-accent hover:shadow-lg transition-all flex flex-col items-center justify-center gap-3 p-4"
+        data-category="washing"
+      >
+        <span class="text-4xl">🧺</span>
+        <span class="text-sm font-bold text-primary text-center">Washing Machine</span>
+      </button>
+
+      <button
+        class="category-card aspect-square rounded-lg bg-white border-2 border-gray-200 hover:border-accent hover:shadow-lg transition-all flex flex-col items-center justify-center gap-3 p-4"
+        data-category="cooking"
+      >
+        <span class="text-4xl">🍳</span>
+        <span class="text-sm font-bold text-primary text-center">Oven / Stove</span>
+      </button>
+
+      <button
+        class="category-card aspect-square rounded-lg bg-white border-2 border-gray-200 hover:border-accent hover:shadow-lg transition-all flex flex-col items-center justify-center gap-3 p-4"
+        data-category="coffee"
+      >
+        <span class="text-4xl">☕</span>
+        <span class="text-sm font-bold text-primary text-center">Coffee Machine</span>
+      </button>
+
+      <button
+        class="category-card aspect-square rounded-lg bg-white border-2 border-gray-200 hover:border-accent hover:shadow-lg transition-all flex flex-col items-center justify-center gap-3 p-4"
+        data-category="dishwashing"
+      >
+        <span class="text-4xl">🍽️</span>
+        <span class="text-sm font-bold text-primary text-center">Dishwasher</span>
+      </button>
+
+      <button
+        class="category-card aspect-square rounded-lg bg-white border-2 border-gray-200 hover:border-accent hover:shadow-lg transition-all flex flex-col items-center justify-center gap-3 p-4"
+        data-category="drying"
+      >
+        <span class="text-4xl">👕</span>
+        <span class="text-sm font-bold text-primary text-center">Dryer</span>
+      </button>
+
+      <button
+        class="category-card aspect-square rounded-lg bg-white border-2 border-gray-200 hover:border-accent hover:shadow-lg transition-all flex flex-col items-center justify-center gap-3 p-4"
+        data-category="other"
+      >
+        <span class="text-4xl">🔧</span>
+        <span class="text-sm font-bold text-primary text-center">Other</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,491 @@
+---
+import Layout from '../layouts/Layout.astro';
+import WelcomeScreen from '../components/WelcomeScreen.astro';
+import CategorySelect from '../components/CategorySelect.astro';
+import PhotoCapture from '../components/PhotoCapture.astro';
+import ContextInputs from '../components/ContextInputs.astro';
+import LoadingState from '../components/LoadingState.astro';
+import ResultsScreen from '../components/ResultsScreen.astro';
+---
+
+<Layout title="ApplianceAI - Snap a photo. Get instructions. Done.">
+  <div id="app" class="w-full min-h-screen bg-surface">
+    <WelcomeScreen />
+    <CategorySelect />
+    <PhotoCapture />
+    <ContextInputs />
+    <LoadingState />
+    <ResultsScreen />
+  </div>
+
+  <script>
+    // ===== STATE MANAGEMENT =====
+    let currentStep = 'welcome';
+    let selectedCategory = null;
+    let capturedImage = null;
+    let contextData = {};
+
+    const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+    const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+    // ===== UTILITY FUNCTIONS =====
+    function showStep(stepName) {
+      currentStep = stepName;
+
+      document.getElementById('welcome-screen').classList.add('hidden');
+      document.getElementById('category-screen').classList.add('hidden');
+      document.getElementById('photo-screen').classList.add('hidden');
+      document.getElementById('context-screen').classList.add('hidden');
+      document.getElementById('loading-screen').classList.add('hidden');
+      document.getElementById('results-screen').classList.add('hidden');
+
+      switch (stepName) {
+        case 'welcome':
+          document.getElementById('welcome-screen').classList.remove('hidden');
+          break;
+        case 'category':
+          document.getElementById('category-screen').classList.remove('hidden');
+          break;
+        case 'photo':
+          document.getElementById('photo-screen').classList.remove('hidden');
+          break;
+        case 'context':
+          document.getElementById('context-screen').classList.remove('hidden');
+          showContextInputs(selectedCategory);
+          break;
+        case 'loading':
+          document.getElementById('loading-screen').classList.remove('hidden');
+          startLoadingAnimation();
+          break;
+        case 'results':
+          document.getElementById('results-screen').classList.remove('hidden');
+          break;
+      }
+
+      window.scrollTo(0, 0);
+    }
+
+    function compressImage(file, callback) {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const img = new Image();
+
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          const maxSize = 1024;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxSize) {
+              height = (height * maxSize) / width;
+              width = maxSize;
+            }
+          } else {
+            if (height > maxSize) {
+              width = (width * maxSize) / height;
+              height = maxSize;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const base64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+          callback(base64);
+        };
+
+        img.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function showContextInputs(category) {
+      document.getElementById('washing-inputs')?.classList.add('hidden');
+      document.getElementById('cooking-inputs')?.classList.add('hidden');
+      document.getElementById('coffee-inputs')?.classList.add('hidden');
+      document.getElementById('dishwashing-inputs')?.classList.add('hidden');
+      document.getElementById('drying-inputs')?.classList.add('hidden');
+      document.getElementById('other-inputs')?.classList.add('hidden');
+
+      switch (category) {
+        case 'washing':
+          document.getElementById('washing-inputs')?.classList.remove('hidden');
+          break;
+        case 'cooking':
+          document.getElementById('cooking-inputs')?.classList.remove('hidden');
+          break;
+        case 'coffee':
+          document.getElementById('coffee-inputs')?.classList.remove('hidden');
+          break;
+        case 'dishwashing':
+          document.getElementById('dishwashing-inputs')?.classList.remove('hidden');
+          break;
+        case 'drying':
+          document.getElementById('drying-inputs')?.classList.remove('hidden');
+          break;
+        case 'other':
+          document.getElementById('other-inputs')?.classList.remove('hidden');
+          break;
+      }
+    }
+
+    function startLoadingAnimation() {
+      const messages = [
+        'Identifying your appliance...',
+        'Reading the controls...',
+        'Analyzing the display...',
+        'Crafting your instructions...',
+      ];
+      const emojis = ['🤖', '📷', '🔍', '✨'];
+
+      let index = 0;
+
+      const interval = setInterval(() => {
+        document.getElementById('loading-message').textContent = messages[index % messages.length];
+        document.getElementById('loading-emoji').textContent = emojis[index % emojis.length];
+        index++;
+      }, 1200);
+
+      (window).loadingInterval = interval;
+    }
+
+    function stopLoadingAnimation() {
+      clearInterval((window).loadingInterval);
+    }
+
+    function buildContextObject(category) {
+      const context = { category };
+
+      switch (category) {
+        case 'washing':
+          context.loadSize = document.getElementById('load-size')?.value;
+          context.washColor = document.getElementById('wash-color')?.value;
+          break;
+        case 'cooking':
+          context.cookingItem = document.getElementById('cooking-item')?.value;
+          break;
+        case 'coffee':
+          context.coffeeType = document.getElementById('coffee-type')?.value;
+          break;
+        case 'dishwashing':
+          context.loadLevel = document.getElementById('load-level')?.value;
+          context.soilLevel = document.getElementById('soil-level')?.value;
+          break;
+        case 'drying':
+          context.fabricType = document.getElementById('fabric-type')?.value;
+          context.heatLevel = document.getElementById('heat-level')?.value;
+          break;
+        case 'other':
+          context.description = document.getElementById('other-description')?.value;
+          break;
+      }
+
+      return context;
+    }
+
+    async function callAnalyzeFunction(imageBase64, task, context) {
+      try {
+        const functionUrl = `${supabaseUrl}/functions/v1/analyze`;
+
+        const response = await fetch(functionUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${supabaseKey}`,
+          },
+          body: JSON.stringify({
+            image: imageBase64,
+            task: task,
+            context: context,
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.text();
+          throw new Error(`Function call failed: ${error}`);
+        }
+
+        const result = await response.json();
+        return result;
+      } catch (error) {
+        console.error('Error calling analyze function:', error);
+        throw error;
+      }
+    }
+
+    function renderResults(data) {
+      document.getElementById('model-name').textContent = data.model || 'Unknown Model';
+
+      const badge = document.getElementById('confidence-badge');
+      if (data.confidence === 'high') {
+        badge.className = 'px-3 py-1 rounded-full text-white font-bold text-sm bg-green-500';
+        badge.textContent = 'High Confidence';
+      } else if (data.confidence === 'medium') {
+        badge.className = 'px-3 py-1 rounded-full text-white font-bold text-sm bg-yellow-500';
+        badge.textContent = 'Medium Confidence';
+      } else {
+        badge.className = 'px-3 py-1 rounded-full text-white font-bold text-sm bg-red-500';
+        badge.textContent = 'Low Confidence';
+      }
+
+      const stepsContainer = document.getElementById('steps-container');
+      stepsContainer.innerHTML = '';
+
+      if (data.steps && Array.isArray(data.steps)) {
+        data.steps.forEach((step, index) => {
+          const stepEl = document.createElement('div');
+          stepEl.className = 'bg-white rounded-lg border-2 border-gray-200 p-4 shadow-sm hover:shadow-md transition-all';
+          stepEl.innerHTML = `
+            <div class="flex gap-3">
+              <div class="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">
+                ${index + 1}
+              </div>
+              <p class="text-text text-sm leading-relaxed flex-1">
+                ${step}
+              </p>
+            </div>
+          `;
+          stepsContainer.appendChild(stepEl);
+        });
+      }
+
+      if (data.safetyTips && Array.isArray(data.safetyTips) && data.safetyTips.length > 0) {
+        const safetySection = document.getElementById('safety-section');
+        safetySection.classList.remove('hidden');
+
+        const safetyList = document.getElementById('safety-list');
+        safetyList.innerHTML = '';
+
+        data.safetyTips.forEach((tip) => {
+          const li = document.createElement('li');
+          li.className = 'text-sm text-text flex gap-2';
+          li.innerHTML = `
+            <span class="flex-shrink-0">⚠️</span>
+            <span>${tip}</span>
+          `;
+          safetyList.appendChild(li);
+        });
+      }
+
+      if (data.estimatedTime) {
+        const timeSection = document.getElementById('time-estimate');
+        timeSection.classList.remove('hidden');
+        document.getElementById('time-text').textContent = data.estimatedTime;
+      }
+    }
+
+    // ===== EVENT LISTENERS =====
+    document.getElementById('get-started-btn')?.addEventListener('click', () => {
+      showStep('category');
+    });
+
+    document.querySelectorAll('.category-card').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        selectedCategory = target.getAttribute('data-category');
+        showStep('photo');
+      });
+    });
+
+    document.getElementById('back-from-category')?.addEventListener('click', () => {
+      showStep('welcome');
+    });
+
+    const fileInput = document.getElementById('file-input');
+    const cameraBtn = document.getElementById('camera-btn');
+    const galleryBtn = document.getElementById('gallery-btn');
+    const photoPreview = document.getElementById('photo-preview');
+    const uploadArea = document.getElementById('upload-area');
+
+    cameraBtn?.addEventListener('click', () => {
+      fileInput.setAttribute('capture', 'environment');
+      fileInput.click();
+    });
+
+    galleryBtn?.addEventListener('click', () => {
+      fileInput.removeAttribute('capture');
+      fileInput.click();
+    });
+
+    fileInput?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          photoPreview.src = event.target?.result;
+          photoPreview.classList.remove('hidden');
+          uploadArea?.classList.add('hidden');
+          capturedImage = file;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById('back-from-photo')?.addEventListener('click', () => {
+      capturedImage = null;
+      photoPreview.src = '';
+      photoPreview.classList.add('hidden');
+      uploadArea?.classList.remove('hidden');
+      fileInput.value = '';
+      showStep('category');
+    });
+
+    // Button toggles
+    document.querySelectorAll('.load-size-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        const value = target.getAttribute('data-value');
+        document.querySelectorAll('.load-size-btn').forEach((b) => {
+          b.classList.remove('bg-accent', 'text-white', 'border-accent');
+          b.classList.add('border-gray-300', 'hover:border-accent');
+        });
+        target.classList.remove('border-gray-300', 'hover:border-accent');
+        target.classList.add('bg-accent', 'text-white', 'border-accent');
+        document.getElementById('load-size').value = value;
+      });
+    });
+
+    document.querySelectorAll('.color-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        const value = target.getAttribute('data-value');
+        document.querySelectorAll('.color-btn').forEach((b) => {
+          b.classList.remove('bg-accent', 'text-white', 'border-accent');
+          b.classList.add('border-gray-300', 'hover:border-accent');
+        });
+        target.classList.remove('border-gray-300', 'hover:border-accent');
+        target.classList.add('bg-accent', 'text-white', 'border-accent');
+        document.getElementById('wash-color').value = value;
+      });
+    });
+
+    document.querySelectorAll('.coffee-type-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        const value = target.getAttribute('data-value');
+        document.querySelectorAll('.coffee-type-btn').forEach((b) => {
+          b.classList.remove('bg-accent', 'text-white', 'border-accent');
+          b.classList.add('border-gray-300', 'hover:border-accent');
+        });
+        target.classList.remove('border-gray-300', 'hover:border-accent');
+        target.classList.add('bg-accent', 'text-white', 'border-accent');
+        document.getElementById('coffee-type').value = value;
+      });
+    });
+
+    document.querySelectorAll('.load-level-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        const value = target.getAttribute('data-value');
+        document.querySelectorAll('.load-level-btn').forEach((b) => {
+          b.classList.remove('bg-accent', 'text-white', 'border-accent');
+          b.classList.add('border-gray-300', 'hover:border-accent');
+        });
+        target.classList.remove('border-gray-300', 'hover:border-accent');
+        target.classList.add('bg-accent', 'text-white', 'border-accent');
+        document.getElementById('load-level').value = value;
+      });
+    });
+
+    document.querySelectorAll('.soil-level-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        const value = target.getAttribute('data-value');
+        document.querySelectorAll('.soil-level-btn').forEach((b) => {
+          b.classList.remove('bg-accent', 'text-white', 'border-accent');
+          b.classList.add('border-gray-300', 'hover:border-accent');
+        });
+        target.classList.remove('border-gray-300', 'hover:border-accent');
+        target.classList.add('bg-accent', 'text-white', 'border-accent');
+        document.getElementById('soil-level').value = value;
+      });
+    });
+
+    document.querySelectorAll('.fabric-type-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        const value = target.getAttribute('data-value');
+        document.querySelectorAll('.fabric-type-btn').forEach((b) => {
+          b.classList.remove('bg-accent', 'text-white', 'border-accent');
+          b.classList.add('border-gray-300', 'hover:border-accent');
+        });
+        target.classList.remove('border-gray-300', 'hover:border-accent');
+        target.classList.add('bg-accent', 'text-white', 'border-accent');
+        document.getElementById('fabric-type').value = value;
+      });
+    });
+
+    document.querySelectorAll('.heat-level-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        const value = target.getAttribute('data-value');
+        document.querySelectorAll('.heat-level-btn').forEach((b) => {
+          b.classList.remove('bg-accent', 'text-white', 'border-accent');
+          b.classList.add('border-gray-300', 'hover:border-accent');
+        });
+        target.classList.remove('border-gray-300', 'hover:border-accent');
+        target.classList.add('bg-accent', 'text-white', 'border-accent');
+        document.getElementById('heat-level').value = value;
+      });
+    });
+
+    document.getElementById('back-from-context')?.addEventListener('click', () => {
+      showStep('photo');
+    });
+
+    document.getElementById('context-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!capturedImage) {
+        alert('Please capture a photo first');
+        return;
+      }
+
+      contextData = buildContextObject(selectedCategory);
+      showStep('loading');
+
+      try {
+        compressImage(capturedImage, async (base64) => {
+          try {
+            const result = await callAnalyzeFunction(base64, selectedCategory, contextData);
+            stopLoadingAnimation();
+            renderResults(result);
+            showStep('results');
+          } catch (error) {
+            stopLoadingAnimation();
+            alert(`Error: ${error.message}`);
+            showStep('context');
+          }
+        });
+      } catch (error) {
+        stopLoadingAnimation();
+        alert(`Error: ${error.message}`);
+        showStep('context');
+      }
+    });
+
+    document.getElementById('scan-another-btn')?.addEventListener('click', () => {
+      capturedImage = null;
+      selectedCategory = null;
+      contextData = {};
+
+      const photoPreview = document.getElementById('photo-preview');
+      photoPreview.src = '';
+      photoPreview.classList.add('hidden');
+
+      const uploadArea = document.getElementById('upload-area');
+      uploadArea?.classList.remove('hidden');
+
+      const fileInput = document.getElementById('file-input');
+      fileInput.value = '';
+
+      showStep('welcome');
+    });
+  </script>
+</Layout>

@@ -1,0 +1,53 @@
+---
+---
+
+<div id="welcome-screen" class="min-h-screen w-full flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-br from-primary via-secondary to-primary">
+  <div class="absolute inset-0 opacity-30">
+    <div class="absolute top-10 left-10 w-40 h-40 bg-accent rounded-full blur-3xl opacity-20"></div>
+    <div class="absolute bottom-10 right-10 w-40 h-40 bg-accent rounded-full blur-3xl opacity-20"></div>
+  </div>
+
+  <div class="relative z-10 text-center max-w-md">
+    <h1 class="text-5xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-accent to-white">
+      ApplianceAI
+    </h1>
+
+    <p class="text-xl text-gray-300 mb-12 leading-relaxed">
+      Snap a photo. Get instructions. Done.
+    </p>
+
+    <div class="grid grid-cols-3 gap-4 mb-12">
+      <div class="flex flex-col items-center">
+        <div class="text-4xl mb-2">📱</div>
+        <p class="text-xs text-gray-300">Snap</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="text-4xl mb-2">🤖</div>
+        <p class="text-xs text-gray-300">AI Reads</p>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="text-4xl mb-2">✨</div>
+        <p class="text-xs text-gray-300">Get Steps</p>
+      </div>
+    </div>
+
+    <button
+      id="get-started-btn"
+      class="w-full bg-accent text-white py-4 rounded-lg font-bold text-lg hover:bg-red-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+    >
+      Get Started
+    </button>
+
+    <p class="text-sm text-gray-400 mt-8">
+      Works with washing machines, ovens, dishwashers, and more
+    </p>
+  </div>
+</div>
+
+<style>
+  #welcome-screen {
+    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #1A1A2E 100%);
+    position: relative;
+    overflow: hidden;
+  }
+</style>

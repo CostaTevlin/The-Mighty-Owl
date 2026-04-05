@@ -1,0 +1,40 @@
+---
+---
+
+<div id="loading-screen" class="hidden min-h-screen w-full flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-br from-primary to-secondary">
+  <div class="w-full max-w-md text-center">
+    <div class="mb-8">
+      <div id="loading-emoji" class="text-8xl animate-pulse">
+        🤖
+      </div>
+    </div>
+
+    <div class="mb-8 h-16 flex items-center justify-center">
+      <div id="loading-message" class="text-xl font-bold text-white animate-fade-in">
+        Identifying your appliance...
+      </div>
+    </div>
+
+    <div class="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
+      <div id="progress-bar" class="bg-accent h-full rounded-full" style="width: 33%; animation: progress 3s ease-in-out infinite;"></div>
+    </div>
+
+    <p class="text-gray-300 mt-8 text-sm">
+      This usually takes a few seconds...
+    </p>
+  </div>
+</div>
+
+<style>
+  @keyframes progress {
+    0% {
+      width: 10%;
+    }
+    50% {
+      width: 90%;
+    }
+    100% {
+      width: 10%;
+    }
+  }
+</style>
