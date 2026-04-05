@@ -1,0 +1,9 @@
+# Local secrets — never commit real keys (matches in any subdirectory)
+.env
+.env.local
+.env.*.local
+
+# Claude Code local settings (can store API keys)
+.claude/settings.local.json
+
+.DS_Store
