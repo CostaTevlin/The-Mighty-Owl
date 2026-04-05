@@ -106,7 +106,7 @@ Respond in JSON format only.`;
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20241022',
+        model: 'claude-sonnet-4-6',
         max_tokens: 1024,
         system: systemPrompt,
         messages: [
@@ -132,9 +132,9 @@ Respond in JSON format only.`;
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      console.error('Claude API error:', error);
-      throw new Error(`Claude API failed: ${response.statusText}`);
+      const errorBody = await response.text();
+      console.error('Claude API error:', errorBody);
+      throw new Error(`Claude API failed: ${errorBody}`);
     }
 
     const claudeResponse = await response.json();

@@ -302,6 +302,16 @@ import ResultsScreen from '../components/ResultsScreen.astro';
     const galleryBtn = document.getElementById('gallery-btn');
     const photoPreview = document.getElementById('photo-preview');
     const uploadArea = document.getElementById('upload-area');
+    const photoActions = document.getElementById('photo-actions');
+
+    function resetPhotoState() {
+      capturedImage = null;
+      photoPreview.src = '';
+      photoPreview.classList.add('hidden');
+      uploadArea?.classList.remove('hidden');
+      photoActions?.classList.add('hidden');
+      fileInput.value = '';
+    }
 
     cameraBtn?.addEventListener('click', () => {
       fileInput.setAttribute('capture', 'environment');
@@ -321,18 +331,23 @@ import ResultsScreen from '../components/ResultsScreen.astro';
           photoPreview.src = event.target?.result;
           photoPreview.classList.remove('hidden');
           uploadArea?.classList.add('hidden');
+          photoActions?.classList.remove('hidden');
           capturedImage = file;
         };
         reader.readAsDataURL(file);
       }
     });
 
+    document.getElementById('continue-from-photo')?.addEventListener('click', () => {
+      showStep('context');
+    });
+
+    document.getElementById('retake-photo')?.addEventListener('click', () => {
+      resetPhotoState();
+    });
+
     document.getElementById('back-from-photo')?.addEventListener('click', () => {
-      capturedImage = null;
-      photoPreview.src = '';
-      photoPreview.classList.add('hidden');
-      uploadArea?.classList.remove('hidden');
-      fileInput.value = '';
+      resetPhotoState();
       showStep('category');
     });
 
@@ -471,20 +486,9 @@ import ResultsScreen from '../components/ResultsScreen.astro';
     });
 
     document.getElementById('scan-another-btn')?.addEventListener('click', () => {
-      capturedImage = null;
       selectedCategory = null;
       contextData = {};
-
-      const photoPreview = document.getElementById('photo-preview');
-      photoPreview.src = '';
-      photoPreview.classList.add('hidden');
-
-      const uploadArea = document.getElementById('upload-area');
-      uploadArea?.classList.remove('hidden');
-
-      const fileInput = document.getElementById('file-input');
-      fileInput.value = '';
-
+      resetPhotoState();
       showStep('welcome');
     });
   </script>

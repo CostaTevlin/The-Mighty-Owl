@@ -14,7 +14,7 @@
     <div class="bg-white rounded-lg border-2 border-dashed border-gray-300 p-8 mb-6 text-center">
       <img id="photo-preview" class="hidden w-full rounded-lg mb-6" alt="Preview" />
 
-      <input type="file" id="file-input" accept="image/*" capture="environment" />
+      <input type="file" id="file-input" accept="image/*" capture="environment" class="hidden" />
 
       <div id="upload-area" class="flex flex-col items-center gap-4">
         <div class="text-5xl">📷</div>
@@ -30,6 +30,21 @@
           class="w-full bg-secondary text-white py-3 rounded-lg font-bold hover:bg-primary transition-all"
         >
           Upload from Gallery
+        </button>
+      </div>
+
+      <div id="photo-actions" class="hidden w-full flex flex-col gap-3 mt-4">
+        <button
+          id="continue-from-photo"
+          class="w-full bg-accent text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-all"
+        >
+          Use This Photo →
+        </button>
+        <button
+          id="retake-photo"
+          class="w-full border-2 border-gray-300 text-gray-600 py-3 rounded-lg font-bold hover:border-accent hover:text-accent transition-all"
+        >
+          Retake Photo
         </button>
       </div>
     </div>
