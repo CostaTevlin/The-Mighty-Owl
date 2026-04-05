@@ -1,26 +1,48 @@
 ---
 ---
 
-<div id="loading-screen" class="hidden min-h-screen w-full flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-br from-primary to-secondary">
+<div id="loading-screen" class="hidden min-h-dvh w-full flex flex-col items-center justify-center px-5 py-8 bg-owl-bg">
   <div class="w-full max-w-md text-center">
+    <!-- Bouncing Owl -->
     <div class="mb-8">
-      <div id="loading-emoji" class="text-8xl animate-pulse">
-        🤖
+      <div id="loading-emoji" class="animate-owl-bounce inline-block">
+        <svg width="80" height="80" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="65" r="45" fill="#58CC02"/>
+          <ellipse cx="60" cy="78" rx="28" ry="25" fill="#D7FFB8"/>
+          <circle cx="42" cy="52" r="16" fill="white"/>
+          <circle cx="78" cy="52" r="16" fill="white"/>
+          <circle cx="45" cy="52" r="8" fill="#3C3C3C"/>
+          <circle cx="75" cy="52" r="8" fill="#3C3C3C"/>
+          <circle cx="48" cy="49" r="3" fill="white"/>
+          <circle cx="78" cy="49" r="3" fill="white"/>
+          <path d="M54 62 L60 70 L66 62" fill="#FF9600" stroke="#E08600" stroke-width="1"/>
+          <path d="M28 30 L38 45 L22 42Z" fill="#46A302"/>
+          <path d="M92 30 L82 45 L98 42Z" fill="#46A302"/>
+          <path d="M15 65 Q10 80 20 90 Q25 75 22 60Z" fill="#46A302"/>
+          <path d="M105 65 Q110 80 100 90 Q95 75 98 60Z" fill="#46A302"/>
+          <ellipse cx="48" cy="108" rx="10" ry="5" fill="#FF9600"/>
+          <ellipse cx="72" cy="108" rx="10" ry="5" fill="#FF9600"/>
+        </svg>
       </div>
     </div>
 
+    <!-- Status Message -->
     <div class="mb-8 h-16 flex items-center justify-center">
-      <div id="loading-message" class="text-xl font-bold text-white animate-fade-in">
-        Identifying your appliance...
+      <div id="loading-message" class="text-xl font-extrabold text-owl-text animate-fade-in">
+        Spotting your appliance...
       </div>
     </div>
 
-    <div class="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
-      <div id="progress-bar" class="bg-accent h-full rounded-full" style="width: 33%; animation: progress 3s ease-in-out infinite;"></div>
+    <!-- Progress Bar -->
+    <div class="w-full bg-owl-bg-alt rounded-full h-3 overflow-hidden border border-owl-border">
+      <div id="progress-bar" class="bg-owl-green h-full rounded-full relative overflow-hidden" style="width: 33%; animation: progress 3s ease-in-out infinite;">
+        <!-- Shimmer effect -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent" style="animation: shimmer 1.5s infinite;"></div>
+      </div>
     </div>
 
-    <p class="text-gray-300 mt-8 text-sm">
-      This usually takes a few seconds...
+    <p class="text-owl-text-muted mt-8 text-sm font-semibold">
+      The Mighty Owl is working on it!
     </p>
   </div>
 </div>

@@ -3,7 +3,7 @@ interface Props {
   title?: string;
 }
 
-const { title = 'ApplianceAI' } = Astro.props;
+const { title = 'The Mighty Owl' } = Astro.props;
 ---
 
 <!doctype html>
@@ -11,11 +11,14 @@ const { title = 'ApplianceAI' } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="ApplianceAI - Snap a photo. Get instructions. Done." />
+    <meta name="description" content="The Mighty Owl - Snap. Learn. Done." />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   </head>
-  <body class="bg-surface text-text font-sans">
+  <body class="bg-owl-bg text-owl-text font-nunito">
     <slot />
   </body>
 </html>
@@ -37,24 +40,26 @@ const { title = 'ApplianceAI' } = Astro.props;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  @keyframes pulse {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.5;
-    }
+  /* Duolingo 3D Button Press Effect */
+  .btn-3d {
+    position: relative;
+    transition: all 100ms ease;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+  .btn-3d:active {
+    border-bottom-width: 0 !important;
+    margin-top: 4px;
   }
 
+  .btn-3d-sm:active {
+    border-bottom-width: 0 !important;
+    margin-top: 3px;
+  }
+
+  /* Animations */
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -77,12 +82,42 @@ const { title = 'ApplianceAI' } = Astro.props;
     }
   }
 
-  .animate-pulse {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  @keyframes owlBounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
   }
 
-  .animate-spin {
-    animation: spin 1s linear infinite;
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(200%);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes confettiBurst {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-60px) scale(0.5);
+    }
   }
 
   .animate-fade-in {
@@ -90,19 +125,51 @@ const { title = 'ApplianceAI' } = Astro.props;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.4s ease-out;
+    animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  .animate-owl-bounce {
+    animation: owlBounce 1s ease-in-out infinite;
+  }
+
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Interactive elements */
+  button,
+  a {
+    cursor: pointer;
   }
 
   input[type='file'] {
     display: none;
   }
 
-  * {
-    transition: all 0.2s ease-in-out;
+  /* Focus states */
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  a:focus-visible {
+    outline: 3px solid #58CC02;
+    outline-offset: 2px;
   }
 
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Touch optimization */
   button,
-  a {
-    cursor: pointer;
+  [role="button"] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 </style>
