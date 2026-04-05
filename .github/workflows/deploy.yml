@@ -28,7 +28,16 @@ jobs:
           cache: npm
           cache-dependency-path: applianceai-prototype/package-lock.json
       - run: npm ci
-      - run: npm run build
+      - name: Build site
+        env:
+          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$PUBLIC_SUPABASE_URL" ] || [ -z "$PUBLIC_SUPABASE_ANON_KEY" ]; then
+            echo "::error::Add repository secrets PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY under Settings → Secrets and variables → Actions. The GitHub Pages build inlines these into the client so API calls go to Supabase, not github.io (which returns 405 for POST)."
+            exit 1
+          fi
+          npm run build
       - name: Archive static assets for Pages
         shell: bash
         run: |
