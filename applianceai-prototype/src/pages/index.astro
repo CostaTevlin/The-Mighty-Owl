@@ -8,8 +8,8 @@ import LoadingState from '../components/LoadingState.astro';
 import ResultsScreen from '../components/ResultsScreen.astro';
 ---
 
-<Layout title="ApplianceAI - Snap a photo. Get instructions. Done.">
-  <div id="app" class="w-full min-h-screen bg-surface">
+<Layout title="The Mighty Owl - Snap. Learn. Done.">
+  <div id="app" class="w-full min-h-dvh bg-owl-bg">
     <WelcomeScreen />
     <CategorySelect />
     <PhotoCapture />
@@ -137,18 +137,16 @@ import ResultsScreen from '../components/ResultsScreen.astro';
 
     function startLoadingAnimation() {
       const messages = [
-        'Identifying your appliance...',
+        'Spotting your appliance...',
         'Reading the controls...',
         'Analyzing the display...',
-        'Crafting your instructions...',
+        'Almost there...',
       ];
-      const emojis = ['🤖', '📷', '🔍', '✨'];
 
       let index = 0;
 
       const interval = setInterval(() => {
         document.getElementById('loading-message').textContent = messages[index % messages.length];
-        document.getElementById('loading-emoji').textContent = emojis[index % emojis.length];
         index++;
       }, 1200);
 
@@ -224,14 +222,14 @@ import ResultsScreen from '../components/ResultsScreen.astro';
 
       const badge = document.getElementById('confidence-badge');
       if (data.confidence === 'high') {
-        badge.className = 'px-3 py-1 rounded-full text-white font-bold text-sm bg-green-500';
-        badge.textContent = 'High Confidence';
+        badge.className = 'px-3 py-1 rounded-full font-bold text-xs bg-owl-green-light text-owl-green-dark';
+        badge.textContent = 'High';
       } else if (data.confidence === 'medium') {
-        badge.className = 'px-3 py-1 rounded-full text-white font-bold text-sm bg-yellow-500';
-        badge.textContent = 'Medium Confidence';
+        badge.className = 'px-3 py-1 rounded-full font-bold text-xs bg-[#FFF3E0] text-owl-orange-dark';
+        badge.textContent = 'Medium';
       } else {
-        badge.className = 'px-3 py-1 rounded-full text-white font-bold text-sm bg-red-500';
-        badge.textContent = 'Low Confidence';
+        badge.className = 'px-3 py-1 rounded-full font-bold text-xs bg-owl-red-light text-owl-red-dark';
+        badge.textContent = 'Low';
       }
 
       const stepsContainer = document.getElementById('steps-container');
@@ -240,13 +238,14 @@ import ResultsScreen from '../components/ResultsScreen.astro';
       if (data.steps && Array.isArray(data.steps)) {
         data.steps.forEach((step, index) => {
           const stepEl = document.createElement('div');
-          stepEl.className = 'bg-white rounded-lg border-2 border-gray-200 p-4 shadow-sm hover:shadow-md transition-all';
+          stepEl.className = 'bg-owl-surface rounded-xl border-2 border-owl-border border-b-4 border-b-owl-border-heavy p-4 animate-slide-up';
+          stepEl.style.animationDelay = `${index * 0.08}s`;
           stepEl.innerHTML = `
-            <div class="flex gap-3">
-              <div class="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">
+            <div class="flex gap-3 items-start">
+              <div class="w-8 h-8 bg-owl-green text-white rounded-full flex items-center justify-center font-extrabold text-sm flex-shrink-0">
                 ${index + 1}
               </div>
-              <p class="text-text text-sm leading-relaxed flex-1">
+              <p class="text-owl-text text-sm leading-relaxed flex-1 font-semibold">
                 ${step}
               </p>
             </div>
@@ -264,10 +263,10 @@ import ResultsScreen from '../components/ResultsScreen.astro';
 
         data.safetyTips.forEach((tip) => {
           const li = document.createElement('li');
-          li.className = 'text-sm text-text flex gap-2';
+          li.className = 'text-sm text-owl-text flex gap-2 items-start';
           li.innerHTML = `
-            <span class="flex-shrink-0">⚠️</span>
-            <span>${tip}</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-owl-red mt-1.5 flex-shrink-0"></span>
+            <span class="font-semibold">${tip}</span>
           `;
           safetyList.appendChild(li);
         });
@@ -351,104 +350,33 @@ import ResultsScreen from '../components/ResultsScreen.astro';
       showStep('category');
     });
 
-    // Button toggles
-    document.querySelectorAll('.load-size-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const target = e.currentTarget;
-        const value = target.getAttribute('data-value');
-        document.querySelectorAll('.load-size-btn').forEach((b) => {
-          b.classList.remove('bg-accent', 'text-white', 'border-accent');
-          b.classList.add('border-gray-300', 'hover:border-accent');
-        });
-        target.classList.remove('border-gray-300', 'hover:border-accent');
-        target.classList.add('bg-accent', 'text-white', 'border-accent');
-        document.getElementById('load-size').value = value;
-      });
-    });
+    // Button toggles — Duolingo-style chip selection
+    const activeClasses = ['bg-owl-green-light', 'text-owl-green-dark', 'border-owl-green', 'border-b-owl-green-dark'];
+    const inactiveClasses = ['border-owl-border', 'border-b-owl-border-heavy', 'text-owl-text'];
 
-    document.querySelectorAll('.color-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const target = e.currentTarget;
-        const value = target.getAttribute('data-value');
-        document.querySelectorAll('.color-btn').forEach((b) => {
-          b.classList.remove('bg-accent', 'text-white', 'border-accent');
-          b.classList.add('border-gray-300', 'hover:border-accent');
+    function setupToggle(btnClass, inputId) {
+      document.querySelectorAll(`.${btnClass}`).forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const target = e.currentTarget;
+          const value = target.getAttribute('data-value');
+          document.querySelectorAll(`.${btnClass}`).forEach((b) => {
+            b.classList.remove(...activeClasses);
+            b.classList.add(...inactiveClasses);
+          });
+          target.classList.remove(...inactiveClasses);
+          target.classList.add(...activeClasses);
+          document.getElementById(inputId).value = value;
         });
-        target.classList.remove('border-gray-300', 'hover:border-accent');
-        target.classList.add('bg-accent', 'text-white', 'border-accent');
-        document.getElementById('wash-color').value = value;
       });
-    });
+    }
 
-    document.querySelectorAll('.coffee-type-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const target = e.currentTarget;
-        const value = target.getAttribute('data-value');
-        document.querySelectorAll('.coffee-type-btn').forEach((b) => {
-          b.classList.remove('bg-accent', 'text-white', 'border-accent');
-          b.classList.add('border-gray-300', 'hover:border-accent');
-        });
-        target.classList.remove('border-gray-300', 'hover:border-accent');
-        target.classList.add('bg-accent', 'text-white', 'border-accent');
-        document.getElementById('coffee-type').value = value;
-      });
-    });
-
-    document.querySelectorAll('.load-level-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const target = e.currentTarget;
-        const value = target.getAttribute('data-value');
-        document.querySelectorAll('.load-level-btn').forEach((b) => {
-          b.classList.remove('bg-accent', 'text-white', 'border-accent');
-          b.classList.add('border-gray-300', 'hover:border-accent');
-        });
-        target.classList.remove('border-gray-300', 'hover:border-accent');
-        target.classList.add('bg-accent', 'text-white', 'border-accent');
-        document.getElementById('load-level').value = value;
-      });
-    });
-
-    document.querySelectorAll('.soil-level-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const target = e.currentTarget;
-        const value = target.getAttribute('data-value');
-        document.querySelectorAll('.soil-level-btn').forEach((b) => {
-          b.classList.remove('bg-accent', 'text-white', 'border-accent');
-          b.classList.add('border-gray-300', 'hover:border-accent');
-        });
-        target.classList.remove('border-gray-300', 'hover:border-accent');
-        target.classList.add('bg-accent', 'text-white', 'border-accent');
-        document.getElementById('soil-level').value = value;
-      });
-    });
-
-    document.querySelectorAll('.fabric-type-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const target = e.currentTarget;
-        const value = target.getAttribute('data-value');
-        document.querySelectorAll('.fabric-type-btn').forEach((b) => {
-          b.classList.remove('bg-accent', 'text-white', 'border-accent');
-          b.classList.add('border-gray-300', 'hover:border-accent');
-        });
-        target.classList.remove('border-gray-300', 'hover:border-accent');
-        target.classList.add('bg-accent', 'text-white', 'border-accent');
-        document.getElementById('fabric-type').value = value;
-      });
-    });
-
-    document.querySelectorAll('.heat-level-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const target = e.currentTarget;
-        const value = target.getAttribute('data-value');
-        document.querySelectorAll('.heat-level-btn').forEach((b) => {
-          b.classList.remove('bg-accent', 'text-white', 'border-accent');
-          b.classList.add('border-gray-300', 'hover:border-accent');
-        });
-        target.classList.remove('border-gray-300', 'hover:border-accent');
-        target.classList.add('bg-accent', 'text-white', 'border-accent');
-        document.getElementById('heat-level').value = value;
-      });
-    });
+    setupToggle('load-size-btn', 'load-size');
+    setupToggle('color-btn', 'wash-color');
+    setupToggle('coffee-type-btn', 'coffee-type');
+    setupToggle('load-level-btn', 'load-level');
+    setupToggle('soil-level-btn', 'soil-level');
+    setupToggle('fabric-type-btn', 'fabric-type');
+    setupToggle('heat-level-btn', 'heat-level');
 
     document.getElementById('back-from-context')?.addEventListener('click', () => {
       showStep('photo');

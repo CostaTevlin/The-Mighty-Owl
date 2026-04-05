@@ -1,53 +1,103 @@
 ---
 ---
 
-<div id="welcome-screen" class="min-h-screen w-full flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-br from-primary via-secondary to-primary">
-  <div class="absolute inset-0 opacity-30">
-    <div class="absolute top-10 left-10 w-40 h-40 bg-accent rounded-full blur-3xl opacity-20"></div>
-    <div class="absolute bottom-10 right-10 w-40 h-40 bg-accent rounded-full blur-3xl opacity-20"></div>
-  </div>
+<div id="welcome-screen" class="min-h-dvh w-full flex flex-col items-center justify-center px-5 py-8 bg-owl-bg">
+  <div class="relative z-10 text-center max-w-md w-full">
+    <!-- Owl Mascot -->
+    <div class="mb-6 flex justify-center">
+      <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Body -->
+        <circle cx="60" cy="65" r="45" fill="#58CC02"/>
+        <!-- Belly -->
+        <ellipse cx="60" cy="78" rx="28" ry="25" fill="#D7FFB8"/>
+        <!-- Left eye white -->
+        <circle cx="42" cy="52" r="16" fill="white"/>
+        <!-- Right eye white -->
+        <circle cx="78" cy="52" r="16" fill="white"/>
+        <!-- Left pupil -->
+        <circle cx="45" cy="52" r="8" fill="#3C3C3C"/>
+        <!-- Right pupil -->
+        <circle cx="75" cy="52" r="8" fill="#3C3C3C"/>
+        <!-- Left eye shine -->
+        <circle cx="48" cy="49" r="3" fill="white"/>
+        <!-- Right eye shine -->
+        <circle cx="78" cy="49" r="3" fill="white"/>
+        <!-- Beak -->
+        <path d="M54 62 L60 70 L66 62" fill="#FF9600" stroke="#E08600" stroke-width="1"/>
+        <!-- Left ear tuft -->
+        <path d="M28 30 L38 45 L22 42Z" fill="#46A302"/>
+        <!-- Right ear tuft -->
+        <path d="M92 30 L82 45 L98 42Z" fill="#46A302"/>
+        <!-- Left wing -->
+        <path d="M15 65 Q10 80 20 90 Q25 75 22 60Z" fill="#46A302"/>
+        <!-- Right wing -->
+        <path d="M105 65 Q110 80 100 90 Q95 75 98 60Z" fill="#46A302"/>
+        <!-- Feet -->
+        <ellipse cx="48" cy="108" rx="10" ry="5" fill="#FF9600"/>
+        <ellipse cx="72" cy="108" rx="10" ry="5" fill="#FF9600"/>
+      </svg>
+    </div>
 
-  <div class="relative z-10 text-center max-w-md">
-    <h1 class="text-5xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-accent to-white">
-      ApplianceAI
+    <h1 class="text-4xl font-extrabold text-owl-text mb-2">
+      The Mighty Owl
     </h1>
 
-    <p class="text-xl text-gray-300 mb-12 leading-relaxed">
-      Snap a photo. Get instructions. Done.
+    <p class="text-lg text-owl-text-muted mb-10 font-semibold">
+      Snap. Learn. Done.
     </p>
 
-    <div class="grid grid-cols-3 gap-4 mb-12">
-      <div class="flex flex-col items-center">
-        <div class="text-4xl mb-2">📱</div>
-        <p class="text-xs text-gray-300">Snap</p>
+    <!-- Flow Steps -->
+    <div class="flex items-center justify-center gap-3 mb-10">
+      <!-- Step 1: Snap -->
+      <div class="flex flex-col items-center gap-2">
+        <div class="w-14 h-14 rounded-2xl bg-owl-green-light flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#58CC02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+            <circle cx="12" cy="13" r="3"/>
+          </svg>
+        </div>
+        <span class="text-xs font-bold text-owl-text-muted">Snap</span>
       </div>
-      <div class="flex flex-col items-center">
-        <div class="text-4xl mb-2">🤖</div>
-        <p class="text-xs text-gray-300">AI Reads</p>
+
+      <!-- Connector -->
+      <div class="w-8 border-t-2 border-dashed border-owl-border-heavy mt-[-20px]"></div>
+
+      <!-- Step 2: AI Reads -->
+      <div class="flex flex-col items-center gap-2">
+        <div class="w-14 h-14 rounded-2xl bg-owl-blue-light flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1CB0F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="16" height="16" x="4" y="4" rx="2"/>
+            <rect width="6" height="6" x="9" y="9" rx="1"/>
+            <path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/>
+          </svg>
+        </div>
+        <span class="text-xs font-bold text-owl-text-muted">AI Reads</span>
       </div>
-      <div class="flex flex-col items-center">
-        <div class="text-4xl mb-2">✨</div>
-        <p class="text-xs text-gray-300">Get Steps</p>
+
+      <!-- Connector -->
+      <div class="w-8 border-t-2 border-dashed border-owl-border-heavy mt-[-20px]"></div>
+
+      <!-- Step 3: Get Steps -->
+      <div class="flex flex-col items-center gap-2">
+        <div class="w-14 h-14 rounded-2xl bg-[#FFF3E0] flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF9600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3.5 5.5 2 7l1.5 1.5"/><path d="M8.5 5.5 10 7 8.5 8.5"/><path d="m5 6 1 2"/><path d="m2 12 10 0"/><path d="m2 16 10 0"/><path d="m2 20 10 0"/><path d="m14 12 8 0"/><path d="m14 16 8 0"/><path d="m14 20 8 0"/>
+          </svg>
+        </div>
+        <span class="text-xs font-bold text-owl-text-muted">Get Steps</span>
       </div>
     </div>
 
+    <!-- CTA Button - Duolingo 3D style -->
     <button
       id="get-started-btn"
-      class="w-full bg-accent text-white py-4 rounded-lg font-bold text-lg hover:bg-red-600 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+      class="btn-3d w-full bg-owl-green text-white py-4 rounded-2xl font-extrabold text-lg border-b-4 border-owl-green-dark uppercase tracking-wide"
     >
       Get Started
     </button>
 
-    <p class="text-sm text-gray-400 mt-8">
-      Works with washing machines, ovens, dishwashers, and more
+    <p class="text-sm text-owl-text-light mt-8 font-semibold">
+      Works with washing machines, ovens, coffee makers & more
     </p>
   </div>
 </div>
-
-<style>
-  #welcome-screen {
-    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #1A1A2E 100%);
-    position: relative;
-    overflow: hidden;
-  }
-</style>

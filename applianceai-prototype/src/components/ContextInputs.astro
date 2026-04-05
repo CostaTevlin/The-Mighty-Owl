@@ -1,110 +1,114 @@
 ---
 ---
 
-<div id="context-screen" class="hidden min-h-screen w-full flex flex-col items-center justify-center px-6 py-8 bg-surface">
+<div id="context-screen" class="hidden min-h-dvh w-full flex flex-col items-center justify-center px-5 py-8 bg-owl-bg">
   <div class="w-full max-w-md">
     <div class="mb-8">
-      <button id="back-from-context" class="text-accent font-bold mb-6 hover:text-red-600 transition">
-        ← Back
+      <button id="back-from-context" class="flex items-center gap-1 text-owl-text-muted font-bold mb-6 hover:text-owl-text transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back
       </button>
-      <h2 class="text-3xl font-bold text-primary mb-2">Tell us more</h2>
-      <p class="text-gray-500">Help us give you better instructions</p>
+      <h2 class="text-2xl font-extrabold text-owl-text mb-1">Tell us more</h2>
+      <p class="text-owl-text-muted font-semibold">Help us give you better instructions</p>
     </div>
 
     <form id="context-form" class="space-y-6">
+      <!-- Washing -->
       <div id="washing-inputs" class="hidden space-y-6">
         <div>
-          <label class="block text-sm font-bold text-primary mb-3">Load Size</label>
+          <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Load Size</label>
           <div class="flex justify-between gap-2">
-            <button type="button" class="load-size-btn flex-1 py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition" data-value="small">Small</button>
-            <button type="button" class="load-size-btn flex-1 py-3 rounded-lg font-bold border-2 border-accent bg-accent text-white" data-value="medium">Medium</button>
-            <button type="button" class="load-size-btn flex-1 py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition" data-value="large">Large</button>
+            <button type="button" class="load-size-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="small">Small</button>
+            <button type="button" class="load-size-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-green border-b-3 border-b-owl-green-dark bg-owl-green-light text-owl-green-dark" data-value="medium">Medium</button>
+            <button type="button" class="load-size-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="large">Large</button>
           </div>
           <input type="hidden" id="load-size" name="loadSize" value="medium" />
         </div>
-
         <div>
-          <label class="block text-sm font-bold text-primary mb-3">Wash Color</label>
+          <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Wash Color</label>
           <div class="flex justify-between gap-2">
-            <button type="button" class="color-btn flex-1 py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition" data-value="whites">Whites</button>
-            <button type="button" class="color-btn flex-1 py-3 rounded-lg font-bold border-2 border-accent bg-accent text-white" data-value="colored">Colored</button>
-            <button type="button" class="color-btn flex-1 py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition" data-value="mixed">Mixed</button>
+            <button type="button" class="color-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="whites">Whites</button>
+            <button type="button" class="color-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-green border-b-3 border-b-owl-green-dark bg-owl-green-light text-owl-green-dark" data-value="colored">Colored</button>
+            <button type="button" class="color-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="mixed">Mixed</button>
           </div>
           <input type="hidden" id="wash-color" name="washColor" value="colored" />
         </div>
       </div>
 
+      <!-- Cooking -->
       <div id="cooking-inputs" class="hidden space-y-6">
         <div>
-          <label class="block text-sm font-bold text-primary mb-3">What are you cooking or heating?</label>
-          <input type="text" id="cooking-item" name="cookingItem" placeholder="e.g., pizza, cookies, leftovers..." class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-accent focus:outline-none transition" />
+          <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">What are you cooking or heating?</label>
+          <input type="text" id="cooking-item" name="cookingItem" placeholder="e.g., pizza, cookies, leftovers..." class="w-full px-4 py-3 rounded-xl border-2 border-owl-border bg-owl-bg-alt focus:border-owl-green focus:outline-none focus:ring-2 focus:ring-owl-green-light transition-colors duration-200 font-semibold text-owl-text placeholder:text-owl-text-light" />
         </div>
       </div>
 
+      <!-- Coffee -->
       <div id="coffee-inputs" class="hidden space-y-6">
         <div>
-          <label class="block text-sm font-bold text-primary mb-3">Drink Type</label>
+          <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Drink Type</label>
           <div class="grid grid-cols-2 gap-3">
-            <button type="button" class="coffee-type-btn py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition" data-value="espresso">Espresso</button>
-            <button type="button" class="coffee-type-btn py-3 rounded-lg font-bold border-2 border-accent bg-accent text-white" data-value="latte">Latte</button>
-            <button type="button" class="coffee-type-btn py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition" data-value="drip">Drip</button>
-            <button type="button" class="coffee-type-btn py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition" data-value="cappuccino">Cappuccino</button>
+            <button type="button" class="coffee-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="espresso">Espresso</button>
+            <button type="button" class="coffee-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-green border-b-3 border-b-owl-green-dark bg-owl-green-light text-owl-green-dark" data-value="latte">Latte</button>
+            <button type="button" class="coffee-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="drip">Drip</button>
+            <button type="button" class="coffee-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="cappuccino">Cappuccino</button>
           </div>
           <input type="hidden" id="coffee-type" name="coffeeType" value="latte" />
         </div>
       </div>
 
+      <!-- Dishwashing -->
       <div id="dishwashing-inputs" class="hidden space-y-6">
         <div>
-          <label class="block text-sm font-bold text-primary mb-3">Load Level</label>
+          <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Load Level</label>
           <div class="flex gap-2">
-            <button type="button" class="load-level-btn flex-1 py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition" data-value="half">Half Load</button>
-            <button type="button" class="load-level-btn flex-1 py-3 rounded-lg font-bold border-2 border-accent bg-accent text-white" data-value="full">Full Load</button>
+            <button type="button" class="load-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="half">Half Load</button>
+            <button type="button" class="load-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-green border-b-3 border-b-owl-green-dark bg-owl-green-light text-owl-green-dark" data-value="full">Full Load</button>
           </div>
           <input type="hidden" id="load-level" name="loadLevel" value="full" />
         </div>
-
         <div>
-          <label class="block text-sm font-bold text-primary mb-3">Soil Level</label>
+          <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Soil Level</label>
           <div class="flex gap-2">
-            <button type="button" class="soil-level-btn flex-1 py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition text-sm" data-value="light">Light</button>
-            <button type="button" class="soil-level-btn flex-1 py-3 rounded-lg font-bold border-2 border-accent bg-accent text-white text-sm" data-value="normal">Normal</button>
-            <button type="button" class="soil-level-btn flex-1 py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition text-sm" data-value="heavy">Heavy</button>
+            <button type="button" class="soil-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="light">Light</button>
+            <button type="button" class="soil-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-green border-b-3 border-b-owl-green-dark bg-owl-green-light text-owl-green-dark" data-value="normal">Normal</button>
+            <button type="button" class="soil-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="heavy">Heavy</button>
           </div>
           <input type="hidden" id="soil-level" name="soilLevel" value="normal" />
         </div>
       </div>
 
+      <!-- Drying -->
       <div id="drying-inputs" class="hidden space-y-6">
         <div>
-          <label class="block text-sm font-bold text-primary mb-3">Fabric Type</label>
+          <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Fabric Type</label>
           <div class="grid grid-cols-3 gap-2">
-            <button type="button" class="fabric-type-btn py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition text-sm" data-value="cotton">Cotton</button>
-            <button type="button" class="fabric-type-btn py-3 rounded-lg font-bold border-2 border-accent bg-accent text-white text-sm" data-value="synthetic">Synthetic</button>
-            <button type="button" class="fabric-type-btn py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition text-sm" data-value="delicate">Delicate</button>
+            <button type="button" class="fabric-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text text-sm transition-colors duration-200" data-value="cotton">Cotton</button>
+            <button type="button" class="fabric-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-green border-b-3 border-b-owl-green-dark bg-owl-green-light text-owl-green-dark text-sm" data-value="synthetic">Synthetic</button>
+            <button type="button" class="fabric-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text text-sm transition-colors duration-200" data-value="delicate">Delicate</button>
           </div>
           <input type="hidden" id="fabric-type" name="fabricType" value="synthetic" />
         </div>
-
         <div>
-          <label class="block text-sm font-bold text-primary mb-3">Heat Level</label>
+          <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Heat Level</label>
           <div class="flex gap-2">
-            <button type="button" class="heat-level-btn flex-1 py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition text-sm" data-value="low">Low</button>
-            <button type="button" class="heat-level-btn flex-1 py-3 rounded-lg font-bold border-2 border-accent bg-accent text-white text-sm" data-value="medium">Medium</button>
-            <button type="button" class="heat-level-btn flex-1 py-3 rounded-lg font-bold border-2 border-gray-300 hover:border-accent transition text-sm" data-value="high">High</button>
+            <button type="button" class="heat-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text text-sm transition-colors duration-200" data-value="low">Low</button>
+            <button type="button" class="heat-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-green border-b-3 border-b-owl-green-dark bg-owl-green-light text-owl-green-dark text-sm" data-value="medium">Medium</button>
+            <button type="button" class="heat-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-3 border-b-owl-border-heavy text-owl-text text-sm transition-colors duration-200" data-value="high">High</button>
           </div>
           <input type="hidden" id="heat-level" name="heatLevel" value="medium" />
         </div>
       </div>
 
+      <!-- Other -->
       <div id="other-inputs" class="hidden space-y-6">
         <div>
-          <label class="block text-sm font-bold text-primary mb-3">Describe the appliance or task</label>
-          <textarea id="other-description" name="description" placeholder="e.g., smart TV remote, air fryer, water heater..." rows="4" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-accent focus:outline-none transition resize-none"></textarea>
+          <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Describe the appliance or task</label>
+          <textarea id="other-description" name="description" placeholder="e.g., smart TV remote, air fryer, water heater..." rows="4" class="w-full px-4 py-3 rounded-xl border-2 border-owl-border bg-owl-bg-alt focus:border-owl-green focus:outline-none focus:ring-2 focus:ring-owl-green-light transition-colors duration-200 resize-none font-semibold text-owl-text placeholder:text-owl-text-light"></textarea>
         </div>
       </div>
 
-      <button type="submit" class="w-full bg-accent text-white py-4 rounded-lg font-bold text-lg hover:bg-red-600 transition-all shadow-lg">
+      <button type="submit" class="btn-3d w-full bg-owl-green text-white py-4 rounded-2xl font-extrabold text-lg border-b-4 border-owl-green-dark uppercase tracking-wide">
         Teach Me!
       </button>
     </form>
