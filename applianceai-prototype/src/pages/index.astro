@@ -75,7 +75,7 @@ import ResultsScreen from '../components/ResultsScreen.astro';
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
 
-          const maxSize = 1024;
+          const maxSize = 768;
           let width = img.width;
           let height = img.height;
 
@@ -95,7 +95,7 @@ import ResultsScreen from '../components/ResultsScreen.astro';
           canvas.height = height;
           ctx.drawImage(img, 0, 0, width, height);
 
-          const base64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+          const base64 = canvas.toDataURL('image/jpeg', 0.6).split(',')[1];
           callback(base64);
         };
 
@@ -225,6 +225,12 @@ import ResultsScreen from '../components/ResultsScreen.astro';
     function renderResults(data) {
       document.getElementById('model-name').textContent = data.model || 'Unknown Model';
 
+      if (data.quickAnswer) {
+        const qaSection = document.getElementById('quick-answer');
+        qaSection.classList.remove('hidden');
+        document.getElementById('quick-answer-text').textContent = data.quickAnswer;
+      }
+
       const badge = document.getElementById('confidence-badge');
       if (data.confidence === 'high') {
         badge.className = 'px-3 py-1 rounded-full font-bold text-xs bg-owl-green-light text-owl-green-dark';
@@ -245,17 +251,38 @@ import ResultsScreen from '../components/ResultsScreen.astro';
           const stepEl = document.createElement('div');
           stepEl.className = 'bg-owl-surface rounded-xl border-2 border-owl-border border-b-4 border-b-owl-border-heavy p-4 animate-slide-up';
           stepEl.style.animationDelay = `${index * 0.08}s`;
-          stepEl.innerHTML = `
-            <div class="flex gap-3 items-start">
-              <div class="w-8 h-8 bg-owl-green text-white rounded-full flex items-center justify-center font-extrabold text-sm flex-shrink-0">
-                ${index + 1}
-              </div>
-              <p class="text-owl-text text-sm leading-relaxed flex-1 font-semibold">
-                ${step}
-              </p>
-            </div>
-          `;
+          const row = document.createElement('div');
+          row.className = 'flex gap-3 items-start';
+          const num = document.createElement('div');
+          num.className = 'w-8 h-8 bg-owl-green text-white rounded-full flex items-center justify-center font-extrabold text-sm flex-shrink-0';
+          num.textContent = String(index + 1);
+          const p = document.createElement('p');
+          p.className = 'text-owl-text text-sm leading-relaxed flex-1 font-semibold';
+          p.textContent = step;
+          row.appendChild(num);
+          row.appendChild(p);
+          stepEl.appendChild(row);
           stepsContainer.appendChild(stepEl);
+        });
+      }
+
+      if (data.commonMistakes && Array.isArray(data.commonMistakes) && data.commonMistakes.length > 0) {
+        const mistakesSection = document.getElementById('mistakes-section');
+        mistakesSection.classList.remove('hidden');
+        const mistakesList = document.getElementById('mistakes-list');
+        mistakesList.innerHTML = '';
+        data.commonMistakes.forEach((mistake) => {
+          const li = document.createElement('li');
+          li.className = 'text-sm text-owl-text flex gap-2 items-start';
+          const icon = document.createElement('span');
+          icon.className = 'font-bold text-owl-orange flex-shrink-0';
+          icon.textContent = '✕';
+          const text = document.createElement('span');
+          text.className = 'font-semibold';
+          text.textContent = mistake;
+          li.appendChild(icon);
+          li.appendChild(text);
+          mistakesList.appendChild(li);
         });
       }
 
@@ -269,10 +296,13 @@ import ResultsScreen from '../components/ResultsScreen.astro';
         data.safetyTips.forEach((tip) => {
           const li = document.createElement('li');
           li.className = 'text-sm text-owl-text flex gap-2 items-start';
-          li.innerHTML = `
-            <span class="w-1.5 h-1.5 rounded-full bg-owl-red mt-1.5 flex-shrink-0"></span>
-            <span class="font-semibold">${tip}</span>
-          `;
+          const dot = document.createElement('span');
+          dot.className = 'w-1.5 h-1.5 rounded-full bg-owl-red mt-1.5 flex-shrink-0';
+          const text = document.createElement('span');
+          text.className = 'font-semibold';
+          text.textContent = tip;
+          li.appendChild(dot);
+          li.appendChild(text);
           safetyList.appendChild(li);
         });
       }
@@ -356,8 +386,8 @@ import ResultsScreen from '../components/ResultsScreen.astro';
     });
 
     // Button toggles — Duolingo-style chip selection
-    const activeClasses = ['bg-owl-green-light', 'text-owl-green-dark', 'border-owl-green', 'border-b-owl-green-dark'];
-    const inactiveClasses = ['border-owl-border', 'border-b-owl-border-heavy', 'text-owl-text'];
+    const activeClasses = ['bg-owl-green', 'text-white', 'border-owl-green', 'border-b-owl-green-dark'];
+    const inactiveClasses = ['bg-owl-bg-alt', 'border-owl-border', 'border-b-owl-border-heavy', 'text-owl-text'];
 
     function setupToggle(btnClass, inputId) {
       document.querySelectorAll(`.${btnClass}`).forEach((btn) => {
