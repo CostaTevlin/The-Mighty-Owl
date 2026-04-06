@@ -6,9 +6,12 @@ import PhotoCapture from '../components/PhotoCapture.astro';
 import ContextInputs from '../components/ContextInputs.astro';
 import LoadingState from '../components/LoadingState.astro';
 import ResultsScreen from '../components/ResultsScreen.astro';
+import PaywallScreen from '../components/PaywallScreen.astro';
+import CreditBadge from '../components/CreditBadge.astro';
 ---
 
 <Layout title="The Mighty Owl - Snap. Learn. Done.">
+  <CreditBadge />
   <div id="app" class="w-full min-h-dvh bg-owl-bg">
     <WelcomeScreen />
     <CategorySelect />
@@ -16,6 +19,7 @@ import ResultsScreen from '../components/ResultsScreen.astro';
     <ContextInputs />
     <LoadingState />
     <ResultsScreen />
+    <PaywallScreen />
   </div>
 
   <script>
@@ -28,6 +32,98 @@ import ResultsScreen from '../components/ResultsScreen.astro';
     const supabaseUrl = (import.meta.env.PUBLIC_SUPABASE_URL || '').replace(/\/$/, '');
     const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
 
+    // ===== CREDITS SYSTEM =====
+    const DEVICE_ID_KEY = 'owl_device_id';
+    const CREDITS_KEY = 'owl_credits';
+    const FREE_CREDITS = 3;
+
+    function getDeviceId() {
+      let id = localStorage.getItem(DEVICE_ID_KEY);
+      if (!id) {
+        id = crypto.randomUUID();
+        localStorage.setItem(DEVICE_ID_KEY, id);
+      }
+      return id;
+    }
+
+    function getCredits() {
+      const stored = localStorage.getItem(CREDITS_KEY);
+      if (stored === null) {
+        localStorage.setItem(CREDITS_KEY, String(FREE_CREDITS));
+        return FREE_CREDITS;
+      }
+      return parseInt(stored, 10);
+    }
+
+    function setCredits(n) {
+      localStorage.setItem(CREDITS_KEY, String(n));
+      updateCreditBadge();
+    }
+
+    function updateCreditBadge() {
+      const credits = getCredits();
+      const badge = document.getElementById('credit-badge');
+      const count = document.getElementById('credit-count');
+      if (count) count.textContent = String(credits);
+      if (badge) badge.setAttribute('data-credits', String(credits));
+
+      const remaining = document.getElementById('credits-remaining-text');
+      if (remaining) {
+        remaining.textContent = `${credits} scan${credits !== 1 ? 's' : ''} remaining`;
+      }
+    }
+
+    async function handlePurchase(product, credits, price) {
+      const btnId = product === 'lifetime' ? 'buy-lifetime' : 'buy-topup';
+      const btn = document.getElementById(btnId);
+      const defaultSpan = document.getElementById(`${btnId}-default`);
+      const successSpan = document.getElementById(`${btnId}-success`);
+
+      if (btn) btn.disabled = true;
+      if (defaultSpan) defaultSpan.textContent = 'Processing...';
+
+      // Log purchase intent to Supabase (fire-and-forget)
+      if (supabaseUrl && supabaseKey) {
+        fetch(`${supabaseUrl}/functions/v1/log-purchase`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${supabaseKey}`,
+          },
+          body: JSON.stringify({
+            deviceId: getDeviceId(),
+            product,
+            creditsGranted: credits,
+            priceShown: price,
+          }),
+        }).catch((err) => console.error('Failed to log purchase:', err));
+      }
+
+      // Grant credits immediately
+      setCredits(getCredits() + credits);
+
+      // Show success state
+      if (defaultSpan) defaultSpan.classList.add('hidden');
+      if (successSpan) successSpan.classList.remove('hidden');
+
+      // Navigate after brief delay
+      setTimeout(() => {
+        // Reset button state for next visit
+        if (defaultSpan) {
+          defaultSpan.textContent = product === 'lifetime' ? 'Get Lifetime Pro' : 'Get Top-up';
+          defaultSpan.classList.remove('hidden');
+        }
+        if (successSpan) successSpan.classList.add('hidden');
+        if (btn) btn.disabled = false;
+
+        showStep('category');
+      }, 1500);
+    }
+
+    // Init credits on page load
+    getDeviceId();
+    updateCreditBadge();
+
     // ===== UTILITY FUNCTIONS =====
     function showStep(stepName) {
       currentStep = stepName;
@@ -38,6 +134,7 @@ import ResultsScreen from '../components/ResultsScreen.astro';
       document.getElementById('context-screen').classList.add('hidden');
       document.getElementById('loading-screen').classList.add('hidden');
       document.getElementById('results-screen').classList.add('hidden');
+      document.getElementById('paywall-screen').classList.add('hidden');
 
       switch (stepName) {
         case 'welcome':
@@ -59,6 +156,9 @@ import ResultsScreen from '../components/ResultsScreen.astro';
           break;
         case 'results':
           document.getElementById('results-screen').classList.remove('hidden');
+          break;
+        case 'paywall':
+          document.getElementById('paywall-screen').classList.remove('hidden');
           break;
       }
 
@@ -352,6 +452,11 @@ import ResultsScreen from '../components/ResultsScreen.astro';
       fileInput.click();
     });
 
+    uploadArea?.addEventListener('click', () => {
+      fileInput.setAttribute('capture', 'environment');
+      fileInput.click();
+    });
+
     galleryBtn?.addEventListener('click', () => {
       fileInput.removeAttribute('capture');
       fileInput.click();
@@ -425,6 +530,12 @@ import ResultsScreen from '../components/ResultsScreen.astro';
         return;
       }
 
+      // Check credits before proceeding
+      if (getCredits() <= 0) {
+        showStep('paywall');
+        return;
+      }
+
       contextData = buildContextObject(selectedCategory);
       showStep('loading');
 
@@ -433,6 +544,10 @@ import ResultsScreen from '../components/ResultsScreen.astro';
           try {
             const result = await callAnalyzeFunction(base64, selectedCategory, contextData);
             stopLoadingAnimation();
+
+            // Deduct credit after successful scan
+            setCredits(getCredits() - 1);
+
             renderResults(result);
             showStep('results');
           } catch (error) {
@@ -452,6 +567,19 @@ import ResultsScreen from '../components/ResultsScreen.astro';
       selectedCategory = null;
       contextData = {};
       resetPhotoState();
+      showStep('welcome');
+    });
+
+    // ===== PAYWALL EVENT LISTENERS =====
+    document.getElementById('buy-lifetime')?.addEventListener('click', () => {
+      handlePurchase('lifetime', 500, '$9.99');
+    });
+
+    document.getElementById('buy-topup')?.addEventListener('click', () => {
+      handlePurchase('topup', 150, '$2.99');
+    });
+
+    document.getElementById('back-from-paywall')?.addEventListener('click', () => {
       showStep('welcome');
     });
   </script>
