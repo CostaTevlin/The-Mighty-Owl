@@ -1,11 +1,12 @@
 ---
 ---
 
-<div
+<button
   id="credit-badge"
   data-credits="3"
-  class="fixed top-4 right-4 z-50 flex items-center gap-1.5 px-3 py-1.5 bg-owl-bg rounded-full border-2 border-owl-border border-b-owl-border-heavy shadow-sm font-nunito"
-  style="border-bottom-width: 3px;"
+  aria-label="Credits remaining — tap to manage"
+  class="fixed top-4 right-4 z-50 flex items-center gap-1.5 px-3 py-1.5 bg-owl-bg rounded-full border-2 border-owl-border shadow-sm font-nunito cursor-pointer hover:border-owl-green transition-colors duration-200"
+  style="border-bottom-width: 3px; border-bottom-color: var(--color-owl-border-heavy, #D1D1D1);"
 >
   <svg
     width="14"
@@ -24,4 +25,4 @@
     />
   </svg>
   <span id="credit-count" class="text-sm font-bold text-owl-text leading-none">3</span>
-</div>
+</button>

@@ -239,15 +239,24 @@ import CreditBadge from '../components/CreditBadge.astro';
       const messages = [
         'Spotting your appliance...',
         'Reading the controls...',
-        'Analyzing the display...',
+        'Analysing the display...',
         'Almost there...',
       ];
+      const progressSteps = ['15%', '40%', '70%', '90%'];
+
+      const msgEl = document.getElementById('loading-message');
+      const progressEl = document.getElementById('progress-bar');
+
+      if (msgEl) msgEl.textContent = messages[0];
+      if (progressEl) progressEl.style.width = progressSteps[0];
 
       let index = 0;
-
       const interval = setInterval(() => {
-        document.getElementById('loading-message').textContent = messages[index % messages.length];
         index++;
+        if (index < messages.length) {
+          if (msgEl) msgEl.textContent = messages[index];
+          if (progressEl) progressEl.style.width = progressSteps[index];
+        }
       }, 1200);
 
       (window).loadingInterval = interval;
@@ -255,6 +264,8 @@ import CreditBadge from '../components/CreditBadge.astro';
 
     function stopLoadingAnimation() {
       clearInterval((window).loadingInterval);
+      const progressEl = document.getElementById('progress-bar');
+      if (progressEl) progressEl.style.width = '100%';
     }
 
     function buildContextObject(category) {
@@ -443,16 +454,12 @@ import CreditBadge from '../components/CreditBadge.astro';
       photoPreview.src = '';
       photoPreview.classList.add('hidden');
       uploadArea?.classList.remove('hidden');
+      document.getElementById('upload-buttons')?.classList.remove('hidden');
       photoActions?.classList.add('hidden');
       fileInput.value = '';
     }
 
     cameraBtn?.addEventListener('click', () => {
-      fileInput.setAttribute('capture', 'environment');
-      fileInput.click();
-    });
-
-    uploadArea?.addEventListener('click', () => {
       fileInput.setAttribute('capture', 'environment');
       fileInput.click();
     });
@@ -470,6 +477,7 @@ import CreditBadge from '../components/CreditBadge.astro';
           photoPreview.src = event.target?.result;
           photoPreview.classList.remove('hidden');
           uploadArea?.classList.add('hidden');
+          document.getElementById('upload-buttons')?.classList.add('hidden');
           photoActions?.classList.remove('hidden');
           capturedImage = file;
         };
@@ -564,10 +572,31 @@ import CreditBadge from '../components/CreditBadge.astro';
     });
 
     document.getElementById('scan-another-btn')?.addEventListener('click', () => {
+      contextData = {};
+      resetPhotoState();
+      showStep('category');
+    });
+
+    document.getElementById('start-over-btn')?.addEventListener('click', () => {
       selectedCategory = null;
       contextData = {};
       resetPhotoState();
       showStep('welcome');
+    });
+
+    // ===== CREDIT BADGE CLICK =====
+    document.getElementById('credit-badge')?.addEventListener('click', () => {
+      const credits = getCredits();
+      const title = document.getElementById('paywall-title');
+      const subtitle = document.getElementById('paywall-subtitle');
+      if (credits > 0) {
+        if (title) title.textContent = `You have ${credits} scan${credits !== 1 ? 's' : ''} left!`;
+        if (subtitle) subtitle.textContent = 'Stock up and never run out';
+      } else {
+        if (title) title.textContent = "You've used your free scans!";
+        if (subtitle) subtitle.textContent = 'Unlock more scans to keep going';
+      }
+      showStep('paywall');
     });
 
     // ===== PAYWALL EVENT LISTENERS =====
