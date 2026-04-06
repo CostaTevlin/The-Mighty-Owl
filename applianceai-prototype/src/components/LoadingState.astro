@@ -28,35 +28,23 @@
 
     <!-- Status Message -->
     <div class="mb-8 h-16 flex items-center justify-center">
-      <div id="loading-message" class="text-xl font-extrabold text-owl-text animate-fade-in">
+      <div id="loading-message" class="text-xl font-extrabold text-owl-text animate-fade-in" aria-live="polite" aria-atomic="true">
         Spotting your appliance...
       </div>
     </div>
 
     <!-- Progress Bar -->
     <div class="w-full bg-owl-bg-alt rounded-full h-3 overflow-hidden border border-owl-border">
-      <div id="progress-bar" class="bg-owl-green h-full rounded-full relative overflow-hidden" style="width: 33%; animation: progress 3s ease-in-out infinite;">
+      <div id="progress-bar" class="bg-owl-green h-full rounded-full relative overflow-hidden transition-all duration-700 ease-in-out" style="width: 10%;">
         <!-- Shimmer effect -->
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent" style="animation: shimmer 1.5s infinite;"></div>
       </div>
     </div>
 
-    <p class="text-owl-text-muted mt-8 text-sm font-semibold">
-      The Mighty Owl is working on it!
-    </p>
+    <div class="mt-6 bg-owl-bg-alt rounded-2xl border-2 border-owl-border p-4 text-left w-full">
+      <p class="text-xs font-bold text-owl-text-muted uppercase tracking-wider mb-1">Did you know?</p>
+      <p class="text-sm font-semibold text-owl-text-muted leading-relaxed">Most appliance errors come from one skipped step — that's exactly what I look for.</p>
+    </div>
   </div>
 </div>
 
-<style>
-  @keyframes progress {
-    0% {
-      width: 10%;
-    }
-    50% {
-      width: 90%;
-    }
-    100% {
-      width: 10%;
-    }
-  }
-</style>

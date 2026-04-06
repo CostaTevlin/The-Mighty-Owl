@@ -5,7 +5,7 @@
   <div class="relative z-10 text-center max-w-md w-full">
 
     <div class="flex justify-center mb-6">
-      <svg width="96" height="96" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="96" height="96" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The Mighty Owl mascot">
         <circle cx="60" cy="65" r="45" fill="#58CC02"/>
         <ellipse cx="60" cy="78" rx="28" ry="25" fill="#D7FFB8"/>
         <circle cx="42" cy="52" r="16" fill="white"/>
@@ -24,8 +24,8 @@
       </svg>
     </div>
 
-    <h1 class="text-2xl font-bold text-owl-text mb-2">You've used your free scans!</h1>
-    <p class="text-owl-text-muted font-normal mb-8">Unlock more scans to keep going</p>
+    <h1 id="paywall-title" class="text-2xl font-bold text-owl-text mb-2">You've used your free scans!</h1>
+    <p id="paywall-subtitle" class="text-owl-text-muted font-normal mb-8">Unlock more scans to keep going</p>
 
     <div class="bg-owl-green-light rounded-2xl border-2 border-owl-green p-5 mb-4 relative">
       <span class="absolute top-0 right-4 -translate-y-1/2 bg-owl-orange text-white text-xs font-extrabold px-3 py-1 rounded-full uppercase">
@@ -48,7 +48,7 @@
       </button>
     </div>
 
-    <div class="bg-owl-bg-alt rounded-2xl border-2 border-owl-border p-5 mb-6">
+    <div class="bg-owl-bg-alt rounded-2xl border-2 border-owl-border border-b-4 border-b-owl-border-heavy p-5 mb-6">
       <div class="text-left mb-3">
         <p class="text-lg font-extrabold text-owl-text">Top-up Pack</p>
         <p class="text-sm text-owl-text-muted">150 scans</p>
@@ -65,9 +65,9 @@
       </button>
     </div>
 
-    <p id="back-from-paywall" class="text-sm text-owl-text-muted font-bold cursor-pointer">
+    <button id="back-from-paywall" class="text-sm text-owl-text-muted font-bold hover:text-owl-text transition-colors duration-200">
       Maybe later
-    </p>
+    </button>
 
   </div>
 </div>

@@ -23,7 +23,7 @@ export default {
         'owl-border': '#E5E5E5',
         'owl-border-heavy': '#CDCDCD',
         'owl-text': '#3C3C3C',
-        'owl-text-muted': '#777777',
+        'owl-text-muted': '#666666',
         'owl-text-light': '#AFAFAF',
       },
       fontFamily: {

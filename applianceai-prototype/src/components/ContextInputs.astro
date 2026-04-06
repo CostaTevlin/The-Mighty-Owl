@@ -1,15 +1,19 @@
 ---
 ---
 
-<div id="context-screen" class="hidden min-h-dvh w-full flex flex-col items-center justify-center px-5 py-8 bg-owl-bg">
+<div id="context-screen" class="hidden min-h-dvh w-full flex flex-col items-center justify-start px-5 pt-6 pb-12 bg-owl-bg">
   <div class="w-full max-w-md">
     <div class="mb-8">
-      <button id="back-from-context" class="flex items-center gap-1 text-owl-text-muted font-bold mb-6 hover:text-owl-text transition-colors duration-200">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        Back
-      </button>
-      <h2 class="text-2xl font-bold text-owl-text mb-1">Tell us more</h2>
-      <p class="text-owl-text-muted font-normal">Help us give you better instructions</p>
+      <div class="grid grid-cols-3 items-center mb-6">
+        <button id="back-from-context" class="flex items-center gap-1 text-owl-text-muted font-bold hover:text-owl-text transition-colors duration-200">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Back
+        </button>
+        <span class="text-xs font-bold text-owl-text-light tracking-wide text-center">Step 3 of 4</span>
+        <div></div>
+      </div>
+      <h2 class="text-2xl font-bold text-owl-text mb-1">One more thing</h2>
+      <p class="text-owl-text-muted font-normal">Your answers sharpen my advice</p>
     </div>
 
     <form id="context-form" class="space-y-6">
@@ -19,19 +23,19 @@
           <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Load Size</label>
           <div class="flex justify-between gap-2">
             <button type="button" class="load-size-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="small">Small</button>
-            <button type="button" class="load-size-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-green border-b-4 border-b-owl-green-dark bg-owl-green text-white" data-value="medium">Medium</button>
+            <button type="button" class="load-size-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="medium">Medium</button>
             <button type="button" class="load-size-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="large">Large</button>
           </div>
-          <input type="hidden" id="load-size" name="loadSize" value="medium" />
+          <input type="hidden" id="load-size" name="loadSize" value="" />
         </div>
         <div>
           <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Wash Color</label>
           <div class="flex justify-between gap-2">
             <button type="button" class="color-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="whites">Whites</button>
-            <button type="button" class="color-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-green border-b-4 border-b-owl-green-dark bg-owl-green text-white" data-value="colored">Colored</button>
+            <button type="button" class="color-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="colored">Colored</button>
             <button type="button" class="color-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="mixed">Mixed</button>
           </div>
-          <input type="hidden" id="wash-color" name="washColor" value="colored" />
+          <input type="hidden" id="wash-color" name="washColor" value="" />
         </div>
       </div>
 
@@ -49,11 +53,11 @@
           <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Drink Type</label>
           <div class="grid grid-cols-2 gap-3">
             <button type="button" class="coffee-type-btn btn-3d-sm py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="espresso">Espresso</button>
-            <button type="button" class="coffee-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-green border-b-4 border-b-owl-green-dark bg-owl-green text-white" data-value="latte">Latte</button>
+            <button type="button" class="coffee-type-btn btn-3d-sm py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="latte">Latte</button>
             <button type="button" class="coffee-type-btn btn-3d-sm py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="drip">Drip</button>
             <button type="button" class="coffee-type-btn btn-3d-sm py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="cappuccino">Cappuccino</button>
           </div>
-          <input type="hidden" id="coffee-type" name="coffeeType" value="latte" />
+          <input type="hidden" id="coffee-type" name="coffeeType" value="" />
         </div>
       </div>
 
@@ -63,18 +67,18 @@
           <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Load Level</label>
           <div class="flex gap-2">
             <button type="button" class="load-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="half">Half Load</button>
-            <button type="button" class="load-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-green border-b-4 border-b-owl-green-dark bg-owl-green text-white" data-value="full">Full Load</button>
+            <button type="button" class="load-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="full">Full Load</button>
           </div>
-          <input type="hidden" id="load-level" name="loadLevel" value="full" />
+          <input type="hidden" id="load-level" name="loadLevel" value="" />
         </div>
         <div>
           <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Soil Level</label>
           <div class="flex gap-2">
             <button type="button" class="soil-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="light">Light</button>
-            <button type="button" class="soil-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-green border-b-4 border-b-owl-green-dark bg-owl-green text-white" data-value="normal">Normal</button>
+            <button type="button" class="soil-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="normal">Normal</button>
             <button type="button" class="soil-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold bg-owl-bg-alt border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text transition-colors duration-200" data-value="heavy">Heavy</button>
           </div>
-          <input type="hidden" id="soil-level" name="soilLevel" value="normal" />
+          <input type="hidden" id="soil-level" name="soilLevel" value="" />
         </div>
       </div>
 
@@ -84,19 +88,19 @@
           <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Fabric Type</label>
           <div class="grid grid-cols-3 gap-2">
             <button type="button" class="fabric-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text text-sm transition-colors duration-200" data-value="cotton">Cotton</button>
-            <button type="button" class="fabric-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-green border-b-4 border-b-owl-green-dark bg-owl-green text-white text-sm" data-value="synthetic">Synthetic</button>
+            <button type="button" class="fabric-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text text-sm transition-colors duration-200" data-value="synthetic">Synthetic</button>
             <button type="button" class="fabric-type-btn btn-3d-sm py-3 rounded-xl font-bold border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text text-sm transition-colors duration-200" data-value="delicate">Delicate</button>
           </div>
-          <input type="hidden" id="fabric-type" name="fabricType" value="synthetic" />
+          <input type="hidden" id="fabric-type" name="fabricType" value="" />
         </div>
         <div>
           <label class="block text-xs font-bold text-owl-text uppercase tracking-wider mb-3">Heat Level</label>
           <div class="flex gap-2">
             <button type="button" class="heat-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text text-sm transition-colors duration-200" data-value="low">Low</button>
-            <button type="button" class="heat-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-green border-b-4 border-b-owl-green-dark bg-owl-green text-white text-sm" data-value="medium">Medium</button>
+            <button type="button" class="heat-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text text-sm transition-colors duration-200" data-value="medium">Medium</button>
             <button type="button" class="heat-level-btn btn-3d-sm flex-1 py-3 rounded-xl font-bold border-2 border-owl-border border-b-4 border-b-owl-border-heavy text-owl-text text-sm transition-colors duration-200" data-value="high">High</button>
           </div>
-          <input type="hidden" id="heat-level" name="heatLevel" value="medium" />
+          <input type="hidden" id="heat-level" name="heatLevel" value="" />
         </div>
       </div>
 
