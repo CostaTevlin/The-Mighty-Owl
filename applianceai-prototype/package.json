@@ -1,7 +1,7 @@
 {
-  "name": "applianceai-prototype",
+  "name": "otto",
   "version": "1.0.0",
-  "description": "ApplianceAI - Snap a photo. Get instructions. Done.",
+  "description": "Otto — Snap. Learn. Done.",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
