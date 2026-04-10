@@ -1,45 +1,45 @@
 ---
 ---
 
-<div id="photo-screen" class="hidden min-h-dvh w-full flex flex-col items-center justify-center px-5 py-8 bg-owl-bg">
+<div id="photo-screen" class="hidden min-h-dvh w-full flex flex-col items-center justify-center px-5 py-8 bg-otto-bg">
   <div class="w-full max-w-md">
     <div class="mb-8">
       <div class="grid grid-cols-3 items-center mb-6">
-        <button id="back-from-photo" class="flex items-center gap-1 text-owl-text-muted font-bold hover:text-owl-text transition-colors duration-200">
+        <button id="back-from-photo" class="flex items-center gap-1 text-otto-ink-mid font-heading font-bold hover:text-otto-ink transition-colors duration-200">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
           Back
         </button>
-        <span class="text-xs font-bold text-owl-text-light tracking-wide text-center">Step 2 of 4</span>
+        <span class="text-xs font-heading font-bold text-otto-ink-soft tracking-wide text-center">Step 2 of 4</span>
         <div></div>
       </div>
-      <h2 class="text-2xl font-bold text-owl-text mb-1">Take a photo</h2>
-      <p class="text-owl-text-muted font-normal">Get a clear shot of the controls</p>
+      <h2 class="text-2xl font-heading font-extrabold text-otto-ink mb-1 tracking-tight">Take a photo</h2>
+      <p class="text-otto-ink-mid font-body italic">Get a clear shot of the controls</p>
     </div>
 
     <!-- Viewfinder Area -->
-    <div class="bg-owl-bg-alt rounded-2xl border-2 border-dashed border-owl-border-heavy p-8 mb-4 flex flex-col items-center gap-4">
+    <div class="bg-otto-bg-alt rounded-2xl border-2 border-dashed border-otto-border-heavy p-8 mb-4 flex flex-col items-center gap-4">
       <img id="photo-preview" class="hidden w-full rounded-xl object-cover" alt="Photo preview" />
 
       <input type="file" id="file-input" accept="image/*" capture="environment" class="hidden" />
 
       <div id="upload-area" class="flex flex-col items-center gap-3 w-full cursor-pointer">
         <!-- Camera icon -->
-        <div class="w-20 h-20 rounded-2xl bg-owl-border flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#AFAFAF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <div class="w-20 h-20 rounded-2xl bg-otto-border flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#8A6E50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
             <circle cx="12" cy="13" r="3"/>
           </svg>
         </div>
-        <p class="text-owl-text-muted font-semibold text-sm">Your photo will appear here</p>
+        <p class="text-otto-ink-mid font-body italic text-sm">Your photo will appear here</p>
       </div>
     </div>
 
     <!-- Buttons outside the grey box so they render on white -->
     <div id="upload-buttons" class="flex flex-col gap-3 mb-6">
-      <!-- Camera Button - Blue 3D -->
+      <!-- Camera Button -->
       <button
         id="camera-btn"
-        class="btn-3d w-full bg-owl-blue text-white py-3 rounded-xl font-bold border-b-4 border-owl-blue-dark flex items-center justify-center gap-2"
+        class="btn-3d w-full bg-otto-teal text-white py-3 rounded-xl font-heading font-bold border-b-4 border-[#147A6B] flex items-center justify-center gap-2"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
@@ -49,15 +49,15 @@
       </button>
 
       <div class="flex items-center gap-3">
-        <div class="flex-1 h-px bg-owl-border"></div>
-        <p class="text-xs text-owl-text-light font-semibold">or</p>
-        <div class="flex-1 h-px bg-owl-border"></div>
+        <div class="flex-1 h-px bg-otto-border"></div>
+        <p class="text-xs text-otto-ink-soft font-body">or</p>
+        <div class="flex-1 h-px bg-otto-border"></div>
       </div>
 
-      <!-- Gallery Button - 3D -->
+      <!-- Gallery Button -->
       <button
         id="gallery-btn"
-        class="btn-3d w-full bg-owl-bg-alt text-owl-text py-3 rounded-xl font-bold border-2 border-owl-border border-b-4 border-b-owl-border-heavy flex items-center justify-center gap-2"
+        class="btn-3d w-full bg-otto-surface text-otto-ink py-3 rounded-xl font-heading font-bold border-2 border-otto-border border-b-4 border-b-otto-border-heavy flex items-center justify-center gap-2"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
@@ -70,19 +70,19 @@
     <div id="photo-actions" class="hidden flex flex-col gap-3 mb-6">
       <button
         id="continue-from-photo"
-        class="btn-3d w-full bg-owl-green text-white py-3 rounded-xl font-bold border-b-4 border-owl-green-dark uppercase tracking-wide"
+        class="btn-3d w-full bg-otto-amber text-white py-3 rounded-xl font-heading font-bold border-b-4 border-otto-amber-deep uppercase tracking-wide"
       >
         Use This Photo
       </button>
       <button
         id="retake-photo"
-        class="btn-3d w-full bg-owl-bg-alt text-owl-text py-3 rounded-xl font-bold border-2 border-owl-border border-b-4 border-b-owl-border-heavy"
+        class="btn-3d w-full bg-otto-surface text-otto-ink py-3 rounded-xl font-heading font-bold border-2 border-otto-border border-b-4 border-b-otto-border-heavy"
       >
         Retake Photo
       </button>
     </div>
 
-    <p class="text-xs text-owl-text-light text-center font-semibold">
+    <p class="text-xs text-otto-ink-soft text-center font-body italic">
       Tip: Get a clear shot of the control panel for best results
     </p>
   </div>

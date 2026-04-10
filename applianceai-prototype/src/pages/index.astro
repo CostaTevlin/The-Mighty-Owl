@@ -10,9 +10,9 @@ import PaywallScreen from '../components/PaywallScreen.astro';
 import CreditBadge from '../components/CreditBadge.astro';
 ---
 
-<Layout title="The Mighty Owl - Snap. Learn. Done.">
+<Layout title="Otto — Snap. Learn. Done.">
   <CreditBadge />
-  <div id="app" class="w-full min-h-dvh bg-owl-bg">
+  <div id="app" class="w-full min-h-dvh bg-otto-bg">
     <WelcomeScreen />
     <CategorySelect />
     <PhotoCapture />
@@ -33,8 +33,8 @@ import CreditBadge from '../components/CreditBadge.astro';
     const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
 
     // ===== CREDITS SYSTEM =====
-    const DEVICE_ID_KEY = 'owl_device_id';
-    const CREDITS_KEY = 'owl_credits';
+    const DEVICE_ID_KEY = 'otto_device_id';
+    const CREDITS_KEY = 'otto_credits';
     const FREE_CREDITS = 3;
 
     function getDeviceId() {
@@ -344,13 +344,13 @@ import CreditBadge from '../components/CreditBadge.astro';
 
       const badge = document.getElementById('confidence-badge');
       if (data.confidence === 'high') {
-        badge.className = 'px-3 py-1 rounded-full font-bold text-xs bg-owl-green-light text-owl-green-dark';
+        badge.className = 'px-3 py-1 rounded-full font-heading font-bold text-xs bg-otto-amber-pale text-otto-amber-deep';
         badge.textContent = 'High';
       } else if (data.confidence === 'medium') {
-        badge.className = 'px-3 py-1 rounded-full font-bold text-xs bg-[#FFF3E0] text-owl-orange-dark';
+        badge.className = 'px-3 py-1 rounded-full font-heading font-bold text-xs bg-otto-amber-pale text-otto-amber-mid';
         badge.textContent = 'Medium';
       } else {
-        badge.className = 'px-3 py-1 rounded-full font-bold text-xs bg-owl-red-light text-owl-red-dark';
+        badge.className = 'px-3 py-1 rounded-full font-heading font-bold text-xs bg-otto-red-light text-otto-red-dark';
         badge.textContent = 'Low';
       }
 
@@ -360,15 +360,15 @@ import CreditBadge from '../components/CreditBadge.astro';
       if (data.steps && Array.isArray(data.steps)) {
         data.steps.forEach((step, index) => {
           const stepEl = document.createElement('div');
-          stepEl.className = 'bg-owl-surface rounded-xl border-2 border-owl-border border-b-4 border-b-owl-border-heavy p-4 animate-slide-up';
+          stepEl.className = 'bg-otto-surface rounded-xl border-2 border-otto-border border-b-4 border-b-otto-border-heavy p-4 animate-slide-up';
           stepEl.style.animationDelay = `${index * 0.08}s`;
           const row = document.createElement('div');
           row.className = 'flex gap-3 items-start';
           const num = document.createElement('div');
-          num.className = 'w-8 h-8 bg-owl-green text-white rounded-full flex items-center justify-center font-extrabold text-sm flex-shrink-0';
+          num.className = 'w-8 h-8 bg-otto-amber text-white rounded-full flex items-center justify-center font-heading font-extrabold text-sm flex-shrink-0';
           num.textContent = String(index + 1);
           const p = document.createElement('p');
-          p.className = 'text-owl-text text-sm leading-relaxed flex-1 font-semibold';
+          p.className = 'text-otto-ink text-sm leading-relaxed flex-1 font-body font-medium';
           p.textContent = step;
           row.appendChild(num);
           row.appendChild(p);
@@ -384,9 +384,9 @@ import CreditBadge from '../components/CreditBadge.astro';
         mistakesList.innerHTML = '';
         data.commonMistakes.forEach((mistake) => {
           const li = document.createElement('li');
-          li.className = 'text-sm text-owl-text flex gap-2 items-start';
+          li.className = 'text-sm text-otto-ink flex gap-2 items-start';
           const icon = document.createElement('span');
-          icon.className = 'font-bold text-owl-orange flex-shrink-0';
+          icon.className = 'font-bold text-otto-amber flex-shrink-0';
           icon.textContent = '✕';
           const text = document.createElement('span');
           text.className = 'font-semibold';
@@ -406,9 +406,9 @@ import CreditBadge from '../components/CreditBadge.astro';
 
         data.safetyTips.forEach((tip) => {
           const li = document.createElement('li');
-          li.className = 'text-sm text-owl-text flex gap-2 items-start';
+          li.className = 'text-sm text-otto-ink flex gap-2 items-start';
           const dot = document.createElement('span');
-          dot.className = 'w-1.5 h-1.5 rounded-full bg-owl-red mt-1.5 flex-shrink-0';
+          dot.className = 'w-1.5 h-1.5 rounded-full bg-otto-red mt-1.5 flex-shrink-0';
           const text = document.createElement('span');
           text.className = 'font-semibold';
           text.textContent = tip;
@@ -499,8 +499,8 @@ import CreditBadge from '../components/CreditBadge.astro';
     });
 
     // Button toggles — Duolingo-style chip selection
-    const activeClasses = ['bg-owl-green', 'text-white', 'border-owl-green', 'border-b-owl-green-dark'];
-    const inactiveClasses = ['bg-owl-bg-alt', 'border-owl-border', 'border-b-owl-border-heavy', 'text-owl-text'];
+    const activeClasses = ['bg-otto-amber', 'text-white', 'border-otto-amber', 'border-b-otto-amber-deep'];
+    const inactiveClasses = ['bg-otto-surface', 'border-otto-border', 'border-b-otto-border-heavy', 'text-otto-ink'];
 
     function setupToggle(btnClass, inputId) {
       document.querySelectorAll(`.${btnClass}`).forEach((btn) => {

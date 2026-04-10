@@ -1,73 +1,72 @@
 ---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<div id="paywall-screen" class="min-h-dvh w-full flex flex-col items-center justify-center px-5 py-8 bg-owl-bg hidden">
-  <div class="relative z-10 text-center max-w-md w-full">
+<div id="paywall-screen" class="min-h-dvh w-full flex flex-col hidden" style="background-color: #FEFEFE;">
 
-    <div class="flex justify-center mb-6">
-      <svg width="96" height="96" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The Mighty Owl mascot">
-        <circle cx="60" cy="65" r="45" fill="#58CC02"/>
-        <ellipse cx="60" cy="78" rx="28" ry="25" fill="#D7FFB8"/>
-        <circle cx="42" cy="52" r="16" fill="white"/>
-        <circle cx="78" cy="52" r="16" fill="white"/>
-        <circle cx="45" cy="52" r="8" fill="#3C3C3C"/>
-        <circle cx="75" cy="52" r="8" fill="#3C3C3C"/>
-        <circle cx="48" cy="49" r="3" fill="white"/>
-        <circle cx="78" cy="49" r="3" fill="white"/>
-        <path d="M54 62 L60 70 L66 62" fill="#FF9600" stroke="#E08600" stroke-width="1"/>
-        <path d="M28 30 L38 45 L22 42Z" fill="#46A302"/>
-        <path d="M92 30 L82 45 L98 42Z" fill="#46A302"/>
-        <path d="M15 65 Q10 80 20 90 Q25 75 22 60Z" fill="#46A302"/>
-        <path d="M105 65 Q110 80 100 90 Q95 75 98 60Z" fill="#46A302"/>
-        <ellipse cx="48" cy="108" rx="10" ry="5" fill="#FF9600"/>
-        <ellipse cx="72" cy="108" rx="10" ry="5" fill="#FF9600"/>
-      </svg>
-    </div>
+  <!-- Otto Hero Zone -->
+  <div class="relative flex-1 flex items-end justify-center pb-2 pt-14 overflow-hidden">
+    <img
+      src={`${base}/images/otto-explaining.png`}
+      alt="Otto explaining"
+      width="340"
+      height="227"
+      class="relative w-[320px] sm:w-[360px] h-auto"
+    />
+  </div>
 
-    <h1 id="paywall-title" class="text-2xl font-bold text-owl-text mb-2">You've used your free scans!</h1>
-    <p id="paywall-subtitle" class="text-owl-text-muted font-normal mb-8">Unlock more scans to keep going</p>
+  <!-- Content card -->
+  <div
+    class="bg-otto-bg rounded-t-[2rem] px-5 pt-8 pb-10 overflow-y-auto"
+    style="box-shadow: 0 -4px 32px rgba(26,16,8,0.07);"
+  >
+    <div class="max-w-md mx-auto text-center">
 
-    <div class="bg-owl-green-light rounded-2xl border-2 border-owl-green p-5 mb-4 relative">
-      <span class="absolute top-0 right-4 -translate-y-1/2 bg-owl-orange text-white text-xs font-extrabold px-3 py-1 rounded-full uppercase">
-        Best Value
-      </span>
-      <div class="text-left mb-3">
-        <p class="text-xl font-extrabold text-owl-text">Lifetime Pro</p>
-        <p class="text-sm text-owl-text-muted">500 scans — use anytime, no expiry</p>
+      <h1 id="paywall-title" class="text-2xl font-heading font-extrabold text-otto-ink mb-2 tracking-tight">Running low on scans</h1>
+      <p id="paywall-subtitle" class="text-otto-ink-mid font-body italic mb-8">Grab a top-up and keep going</p>
+
+      <div class="bg-otto-amber-pale rounded-2xl border-2 border-otto-amber p-5 mb-4 relative">
+        <span class="absolute top-0 right-4 -translate-y-1/2 bg-otto-amber text-white text-xs font-heading font-extrabold px-3 py-1 rounded-full uppercase">
+          Best Value
+        </span>
+        <div class="text-left mb-3">
+          <p class="text-xl font-heading font-extrabold text-otto-ink">Lifetime Pro</p>
+          <p class="text-sm text-otto-ink-mid font-body italic">500 scans — use anytime, no expiry</p>
+        </div>
+        <div class="flex items-baseline gap-2 mb-4">
+          <span class="text-3xl font-heading font-extrabold text-otto-amber-deep">$9.99</span>
+          <span class="text-sm text-otto-ink-mid font-body">one-time</span>
+        </div>
+        <button
+          id="buy-lifetime"
+          class="btn-3d w-full bg-otto-amber text-white border-b-4 border-otto-amber-deep py-3 rounded-xl font-heading font-extrabold text-base uppercase"
+        >
+          <span id="buy-lifetime-default">Get Lifetime Pro</span>
+          <span id="buy-lifetime-success" class="hidden">&#10003; Unlocked!</span>
+        </button>
       </div>
-      <div class="flex items-baseline gap-2 mb-4">
-        <span class="text-3xl font-extrabold text-owl-green-dark">$9.99</span>
-        <span class="text-sm text-owl-text-muted">one-time</span>
+
+      <div class="bg-otto-surface rounded-2xl border-2 border-otto-border border-b-4 border-b-otto-border-heavy p-5 mb-6">
+        <div class="text-left mb-3">
+          <p class="text-lg font-heading font-extrabold text-otto-ink">Top-up Pack</p>
+          <p class="text-sm text-otto-ink-mid font-body italic">150 scans</p>
+        </div>
+        <div class="flex items-baseline gap-2 mb-4">
+          <span class="text-2xl font-heading font-extrabold text-otto-ink">$2.99</span>
+        </div>
+        <button
+          id="buy-topup"
+          class="btn-3d w-full bg-otto-teal text-white border-b-4 border-[#147A6B] py-3 rounded-xl font-heading font-extrabold text-base uppercase"
+        >
+          <span id="buy-topup-default">Get Top-up</span>
+          <span id="buy-topup-success" class="hidden">&#10003; Unlocked!</span>
+        </button>
       </div>
-      <button
-        id="buy-lifetime"
-        class="btn-3d w-full bg-owl-green text-white border-b-4 border-owl-green-dark py-3 rounded-xl font-extrabold text-base uppercase"
-      >
-        <span id="buy-lifetime-default">Get Lifetime Pro</span>
-        <span id="buy-lifetime-success" class="hidden">&#10003; Unlocked!</span>
+
+      <button id="back-from-paywall" class="text-sm text-otto-ink-mid font-heading font-bold hover:text-otto-ink transition-colors duration-200">
+        Maybe later
       </button>
+
     </div>
-
-    <div class="bg-owl-bg-alt rounded-2xl border-2 border-owl-border border-b-4 border-b-owl-border-heavy p-5 mb-6">
-      <div class="text-left mb-3">
-        <p class="text-lg font-extrabold text-owl-text">Top-up Pack</p>
-        <p class="text-sm text-owl-text-muted">150 scans</p>
-      </div>
-      <div class="flex items-baseline gap-2 mb-4">
-        <span class="text-2xl font-extrabold text-owl-text">$2.99</span>
-      </div>
-      <button
-        id="buy-topup"
-        class="btn-3d w-full bg-owl-blue text-white border-b-4 border-owl-blue-dark py-3 rounded-xl font-extrabold text-base uppercase"
-      >
-        <span id="buy-topup-default">Get Top-up</span>
-        <span id="buy-topup-success" class="hidden">&#10003; Unlocked!</span>
-      </button>
-    </div>
-
-    <button id="back-from-paywall" class="text-sm text-owl-text-muted font-bold hover:text-owl-text transition-colors duration-200">
-      Maybe later
-    </button>
-
   </div>
 </div>
