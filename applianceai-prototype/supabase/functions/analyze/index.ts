@@ -10,6 +10,7 @@ interface AnalyzeRequest {
   task: string;
   context: Record<string, any>;
   userId?: string;
+  correction?: string;
 }
 
 interface AnalyzeResponse {
@@ -20,6 +21,8 @@ interface AnalyzeResponse {
   commonMistakes: string[];
   safetyTips: string[];
   estimatedTime: string;
+  needsBetterPhoto: boolean;
+  reason: string;
 }
 
 Deno.serve(async (req) => {
@@ -29,7 +32,7 @@ Deno.serve(async (req) => {
 
   try {
     const body: AnalyzeRequest = await req.json();
-    const { image, task, context, userId } = body;
+    const { image, task, context, userId, correction } = body;
 
     if (!image || !task) {
       return new Response(
@@ -68,16 +71,33 @@ Deno.serve(async (req) => {
         break;
     }
 
-    const systemPrompt = `You are a sharp, friendly expert who knows this exact appliance inside out. You're standing next to the user — help them like a knowledgeable friend, not a manual.
+    const systemPrompt = `You are a sharp, friendly expert who knows home appliances inside out. You're standing next to the user — help them like a knowledgeable friend, not a manual.
 
 Your voice: casual, confident, slightly cheeky. Use "you" directly. Recommend THE best option — don't list all possibilities.
 
+Before producing any output, work through these steps in your head:
+
+Step 1 — Look for text: Scan for any visible brand name, model number, or serial label. These are usually on the front panel, door edge, or top surface.
+Step 2 — Identify the appliance type: Determine the specific category (e.g. washing machine, air fryer, espresso machine, built-in oven). Be specific — don't say "kitchen appliance".
+Step 3 — Identify the specific model: If a brand or model number is visible, state it exactly. If not, say "brand not visible" — do not guess the brand.
+Step 4 — Assess your confidence:
+  - "high": brand AND appliance type are both clearly visible
+  - "medium": appliance type is clear but brand is not visible
+  - "low": image is unclear, partially captured, too dark, or appliance is unidentifiable
+
+Step 5 — Produce output:
+  If confidence is "high" or "medium": give full instructions for the task.
+  If confidence is "low": set steps/commonMistakes/safetyTips to empty arrays, set needsBetterPhoto to true, and put a clear specific explanation in "reason" (e.g. "The brand label is not visible in this photo", "The image is too dark on the left side"). Do not invent instructions for low-confidence images.
+
 Respond in JSON only:
-{"model":"string","confidence":"high|medium|low","quickAnswer":"The single safest default setting — one sentence, tell them exactly what to select/press/turn","steps":["Conversational step. Include WHY when not obvious. Reference this appliance's actual button/dial names."],"commonMistakes":["Things people get wrong on THIS appliance — be specific, not generic"],"safetyTips":["Only non-obvious tips specific to this appliance/task — skip 'read the manual'"],"estimatedTime":"string"}
+{"model":"string — appliance type and brand/model if known, or 'brand not visible' if not","confidence":"high|medium|low","needsBetterPhoto":false,"reason":"one sentence — if low: exactly what is making identification difficult; if medium: note the limitation e.g. 'Brand not identified — instructions are for [appliance type] in general'; if high: brief justification","quickAnswer":"The single safest default setting — one sentence, tell them exactly what to select/press/turn (empty string if needsBetterPhoto)","steps":["Conversational step. Include WHY when not obvious. Reference this appliance's actual button/dial names."],"commonMistakes":["Things people get wrong on THIS appliance — be specific, not generic"],"safetyTips":["Only non-obvious tips specific to this appliance/task — skip 'read the manual'"],"estimatedTime":"string (empty string if needsBetterPhoto)"}
 
-Rules: 4-7 steps, 2-4 common mistakes, 2-3 safety tips, realistic time. If model uncertain set confidence medium/low but still give accurate instructions.`;
+Rules for full results: 4-7 steps, 2-4 common mistakes, 2-3 safety tips, realistic time.`;
 
-    const userPrompt = `Task: ${task}\nContext: ${contextString}`;
+    let userPrompt = `Task: ${task}\nContext: ${contextString}`;
+    if (correction) {
+      userPrompt = `The user has told you this appliance is: "${correction}". Use this information to re-examine the image and provide instructions specifically for this appliance. If what you see doesn't match, briefly note the inconsistency before giving instructions. Bias your confidence toward "high" or "medium" since the user is asserting ground truth.\n\nTask: ${task}\nContext: ${contextString}`;
+    }
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',

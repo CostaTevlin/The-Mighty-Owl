@@ -28,6 +28,9 @@ import CreditBadge from '../components/CreditBadge.astro';
     let selectedCategory = null;
     let capturedImage = null;
     let contextData = {};
+    let lastScanImage = null;
+    let lastScanTask = null;
+    let lastScanContext = null;
 
     const supabaseUrl = (import.meta.env.PUBLIC_SUPABASE_URL || '').replace(/\/$/, '');
     const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
@@ -145,6 +148,9 @@ import CreditBadge from '../components/CreditBadge.astro';
           break;
         case 'photo':
           document.getElementById('photo-screen').classList.remove('hidden');
+          if (!localStorage.getItem('hasSeenCaptureGuide')) {
+            document.getElementById('capture-guide-modal')?.classList.remove('hidden');
+          }
           break;
         case 'context':
           document.getElementById('context-screen').classList.remove('hidden');
@@ -175,7 +181,7 @@ import CreditBadge from '../components/CreditBadge.astro';
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
 
-          const maxSize = 768;
+          const maxSize = 1200;
           let width = img.width;
           let height = img.height;
 
@@ -195,7 +201,7 @@ import CreditBadge from '../components/CreditBadge.astro';
           canvas.height = height;
           ctx.drawImage(img, 0, 0, width, height);
 
-          const base64 = canvas.toDataURL('image/jpeg', 0.6).split(',')[1];
+          const base64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
           callback(base64);
         };
 
@@ -298,7 +304,7 @@ import CreditBadge from '../components/CreditBadge.astro';
       return context;
     }
 
-    async function callAnalyzeFunction(imageBase64, task, context) {
+    async function callAnalyzeFunction(imageBase64, task, context, correction) {
       if (!supabaseUrl || !supabaseKey) {
         throw new Error(
           'Supabase is not configured (missing PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY at build time). For GitHub Pages, add those values as repository Actions secrets so the deploy workflow can pass them into npm run build.'
@@ -307,17 +313,20 @@ import CreditBadge from '../components/CreditBadge.astro';
       try {
         const functionUrl = `${supabaseUrl}/functions/v1/analyze`;
 
+        const payload = {
+          image: imageBase64,
+          task: task,
+          context: context,
+        };
+        if (correction) payload.correction = correction;
+
         const response = await fetch(functionUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${supabaseKey}`,
           },
-          body: JSON.stringify({
-            image: imageBase64,
-            task: task,
-            context: context,
-          }),
+          body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
@@ -336,22 +345,47 @@ import CreditBadge from '../components/CreditBadge.astro';
     function renderResults(data) {
       document.getElementById('model-name').textContent = data.model || 'Unknown Model';
 
+      // Reset all conditional blocks before rendering
+      document.getElementById('low-confidence-block')?.classList.add('hidden');
+      document.getElementById('medium-confidence-banner')?.classList.add('hidden');
+      document.getElementById('correction-wrapper')?.classList.add('hidden');
+      document.getElementById('correction-block')?.classList.add('hidden');
+      document.getElementById('quick-answer')?.classList.add('hidden');
+      document.getElementById('time-estimate')?.classList.add('hidden');
+      document.getElementById('mistakes-section')?.classList.add('hidden');
+      document.getElementById('safety-section')?.classList.add('hidden');
+
+      const badge = document.getElementById('confidence-badge');
+
+      if (data.needsBetterPhoto) {
+        badge.classList.add('hidden');
+        document.getElementById('low-confidence-block')?.classList.remove('hidden');
+        const reasonEl = document.getElementById('low-confidence-reason');
+        if (reasonEl) reasonEl.textContent = data.reason || '';
+        document.getElementById('steps-container').innerHTML = '';
+        return;
+      }
+
+      badge.classList.remove('hidden');
+      if (data.confidence === 'high') {
+        badge.className = 'px-3 py-1 rounded-full font-heading font-bold text-xs bg-otto-amber-pale text-otto-amber-deep';
+        badge.textContent = '✅ High';
+      } else if (data.confidence === 'medium') {
+        badge.className = 'px-3 py-1 rounded-full font-heading font-bold text-xs bg-otto-amber-pale text-otto-amber-mid';
+        badge.textContent = '⚠️ Medium';
+        const banner = document.getElementById('medium-confidence-banner');
+        banner?.classList.remove('hidden');
+        const typeEl = document.getElementById('medium-confidence-type');
+        if (typeEl) typeEl.textContent = data.model || 'this appliance type';
+      } else {
+        badge.className = 'px-3 py-1 rounded-full font-heading font-bold text-xs bg-otto-red-light text-otto-red-dark';
+        badge.textContent = 'Low';
+      }
+
       if (data.quickAnswer) {
         const qaSection = document.getElementById('quick-answer');
         qaSection.classList.remove('hidden');
         document.getElementById('quick-answer-text').textContent = data.quickAnswer;
-      }
-
-      const badge = document.getElementById('confidence-badge');
-      if (data.confidence === 'high') {
-        badge.className = 'px-3 py-1 rounded-full font-heading font-bold text-xs bg-otto-amber-pale text-otto-amber-deep';
-        badge.textContent = 'High';
-      } else if (data.confidence === 'medium') {
-        badge.className = 'px-3 py-1 rounded-full font-heading font-bold text-xs bg-otto-amber-pale text-otto-amber-mid';
-        badge.textContent = 'Medium';
-      } else {
-        badge.className = 'px-3 py-1 rounded-full font-heading font-bold text-xs bg-otto-red-light text-otto-red-dark';
-        badge.textContent = 'Low';
       }
 
       const stepsContainer = document.getElementById('steps-container');
@@ -423,6 +457,9 @@ import CreditBadge from '../components/CreditBadge.astro';
         timeSection.classList.remove('hidden');
         document.getElementById('time-text').textContent = data.estimatedTime;
       }
+
+      // Show the correction flow for high/medium results
+      document.getElementById('correction-wrapper')?.classList.remove('hidden');
     }
 
     // ===== EVENT LISTENERS =====
@@ -493,6 +530,11 @@ import CreditBadge from '../components/CreditBadge.astro';
       resetPhotoState();
     });
 
+    document.getElementById('capture-guide-got-it')?.addEventListener('click', () => {
+      localStorage.setItem('hasSeenCaptureGuide', 'true');
+      document.getElementById('capture-guide-modal')?.classList.add('hidden');
+    });
+
     document.getElementById('back-from-photo')?.addEventListener('click', () => {
       resetPhotoState();
       showStep('category');
@@ -550,14 +592,21 @@ import CreditBadge from '../components/CreditBadge.astro';
       try {
         compressImage(capturedImage, async (base64) => {
           try {
+            lastScanImage = base64;
+            lastScanTask = selectedCategory;
+            lastScanContext = contextData;
+
             const result = await callAnalyzeFunction(base64, selectedCategory, contextData);
             stopLoadingAnimation();
 
-            // Deduct credit after successful scan
-            setCredits(getCredits() - 1);
-
-            renderResults(result);
-            showStep('results');
+            if (result.needsBetterPhoto) {
+              renderResults(result);
+              showStep('results');
+            } else {
+              setCredits(getCredits() - 1);
+              renderResults(result);
+              showStep('results');
+            }
           } catch (error) {
             stopLoadingAnimation();
             alert(`Error: ${error.message}`);
@@ -575,6 +624,51 @@ import CreditBadge from '../components/CreditBadge.astro';
       contextData = {};
       resetPhotoState();
       showStep('category');
+    });
+
+    document.getElementById('retake-from-results')?.addEventListener('click', () => {
+      resetPhotoState();
+      showStep('photo');
+    });
+
+    document.getElementById('wrong-appliance-link')?.addEventListener('click', () => {
+      document.getElementById('correction-block')?.classList.remove('hidden');
+    });
+
+    document.getElementById('correction-submit')?.addEventListener('click', async () => {
+      const correctionInput = document.getElementById('correction-input');
+      const correction = correctionInput?.value?.trim();
+      if (!correction) return;
+
+      if (getCredits() <= 0) {
+        showStep('paywall');
+        return;
+      }
+
+      if (!lastScanImage || !lastScanTask || !lastScanContext) return;
+
+      document.getElementById('correction-block')?.classList.add('hidden');
+      showStep('loading');
+
+      try {
+        const result = await callAnalyzeFunction(lastScanImage, lastScanTask, lastScanContext, correction);
+        stopLoadingAnimation();
+
+        if (result.needsBetterPhoto) {
+          renderResults(result);
+          showStep('results');
+        } else {
+          setCredits(getCredits() - 1);
+          renderResults(result);
+          showStep('results');
+        }
+
+        if (correctionInput) correctionInput.value = '';
+      } catch (error) {
+        stopLoadingAnimation();
+        alert(`Error: ${error.message}`);
+        showStep('results');
+      }
     });
 
     document.getElementById('start-over-btn')?.addEventListener('click', () => {
