@@ -2,6 +2,34 @@
 ---
 
 <div id="photo-screen" class="hidden min-h-dvh w-full flex flex-col items-center justify-center px-5 py-8 bg-otto-bg">
+
+  <!-- Capture guide modal — shown once per device -->
+  <div id="capture-guide-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-5" style="background: rgba(26,16,8,0.55);">
+    <div class="bg-otto-surface rounded-2xl border-2 border-otto-border border-b-4 border-b-otto-border-heavy p-6 w-full max-w-sm">
+      <h3 class="text-xl font-heading font-extrabold text-otto-ink mb-4 tracking-tight">Quick tips for a good photo</h3>
+      <ul class="space-y-3 mb-6">
+        <li class="flex items-start gap-3 text-sm font-body font-medium text-otto-ink leading-snug">
+          <span class="text-lg leading-none">📷</span>
+          <span>Full appliance in frame — don't crop the edges</span>
+        </li>
+        <li class="flex items-start gap-3 text-sm font-body font-medium text-otto-ink leading-snug">
+          <span class="text-lg leading-none">🏷️</span>
+          <span>Brand label visible — usually on front panel or door edge</span>
+        </li>
+        <li class="flex items-start gap-3 text-sm font-body font-medium text-otto-ink leading-snug">
+          <span class="text-lg leading-none">💡</span>
+          <span>Good lighting — no strong shadows across the front</span>
+        </li>
+        <li class="flex items-start gap-3 text-sm font-body font-medium text-otto-ink leading-snug">
+          <span class="text-lg leading-none">✋</span>
+          <span>Hold steady — tap the button, don't move the phone</span>
+        </li>
+      </ul>
+      <button id="capture-guide-got-it" class="btn-3d w-full bg-otto-amber text-white py-3 rounded-xl font-heading font-bold border-b-4 border-otto-amber-deep uppercase tracking-wide">
+        Got it
+      </button>
+    </div>
+  </div>
   <div class="w-full max-w-md">
     <div class="mb-8">
       <div class="grid grid-cols-3 items-center mb-6">

@@ -40,6 +40,32 @@
       </p>
     </div>
 
+    <!-- Low confidence block -->
+    <div id="low-confidence-block" class="hidden bg-otto-surface rounded-2xl border-2 border-otto-border border-b-4 border-b-otto-border-heavy p-5 mb-5">
+      <div class="text-center mb-4">
+        <span class="text-4xl">😕</span>
+        <h3 class="text-xl font-heading font-extrabold text-otto-ink mt-2 mb-2">Couldn't get a clear read</h3>
+        <p id="low-confidence-reason" class="text-sm font-body text-otto-ink-mid leading-relaxed"></p>
+      </div>
+      <div class="bg-otto-bg-alt rounded-xl p-4 mb-4">
+        <p class="text-xs font-heading font-bold text-otto-ink-mid uppercase tracking-wider mb-2">Tips for a better photo</p>
+        <ul class="space-y-1">
+          <li class="text-sm font-body font-medium text-otto-ink">• Move closer so the label is readable</li>
+          <li class="text-sm font-body font-medium text-otto-ink">• Make sure the whole appliance is in frame</li>
+          <li class="text-sm font-body font-medium text-otto-ink">• Try better lighting or turn on a light nearby</li>
+        </ul>
+      </div>
+      <button id="retake-from-results" class="btn-3d w-full bg-otto-amber text-white py-3 rounded-xl font-heading font-bold border-b-4 border-otto-amber-deep uppercase tracking-wide mb-2">
+        Retake Photo
+      </button>
+      <p class="text-xs text-otto-ink-soft text-center font-body italic">No credit used — try again free</p>
+    </div>
+
+    <!-- Medium confidence banner (shown above steps) -->
+    <div id="medium-confidence-banner" class="hidden bg-otto-amber-pale rounded-xl border-l-4 border-otto-amber p-3 mb-4">
+      <p class="text-sm font-heading font-bold text-otto-amber-deep">⚠️ Brand not identified — instructions are for <span id="medium-confidence-type"></span> in general</p>
+    </div>
+
     <!-- Quick Answer -->
     <div id="quick-answer" class="bg-otto-amber-pale rounded-2xl border-2 border-otto-amber border-b-4 border-b-otto-amber-deep p-4 mb-5 hidden">
       <div class="flex items-center gap-2 mb-2">
@@ -75,7 +101,7 @@
     </div>
 
     <!-- Safety Tips -->
-    <div id="safety-section" class="bg-otto-red-light rounded-xl border-l-4 border-otto-red p-4 mb-6 hidden">
+    <div id="safety-section" class="bg-otto-red-light rounded-xl border-l-4 border-otto-red p-4 mb-5 hidden">
       <div class="flex items-center gap-2 mb-3">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF4B4B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>
@@ -84,6 +110,26 @@
       </div>
       <ul id="safety-list" class="space-y-2">
       </ul>
+    </div>
+
+    <!-- Wrong appliance correction flow (shown for high/medium only) -->
+    <div id="correction-wrapper" class="hidden mb-5">
+      <button id="wrong-appliance-link" class="text-sm text-otto-ink-soft font-body italic hover:text-otto-ink transition-colors duration-200">
+        Wrong appliance?
+      </button>
+      <div id="correction-block" class="hidden mt-3 bg-otto-surface rounded-2xl border-2 border-otto-border border-b-4 border-b-otto-border-heavy p-4">
+        <label class="block text-sm font-heading font-bold text-otto-ink mb-2">What appliance is this actually?</label>
+        <input
+          id="correction-input"
+          type="text"
+          placeholder="e.g. Siemens built-in oven"
+          class="w-full rounded-xl border-2 border-otto-border px-3 py-2 text-sm font-body text-otto-ink bg-otto-bg outline-none focus:border-otto-amber mb-3"
+        />
+        <button id="correction-submit" class="btn-3d w-full bg-otto-amber text-white py-3 rounded-xl font-heading font-bold border-b-4 border-otto-amber-deep uppercase tracking-wide mb-2">
+          Re-scan with this info
+        </button>
+        <p class="text-xs text-otto-ink-soft text-center font-body italic">This will use 1 credit</p>
+      </div>
     </div>
 
     <!-- Scan Another CTA -->
